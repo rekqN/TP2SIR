@@ -179,41 +179,6 @@ img {
     background-size: cover;
 }
 
-.portfolio-item .iconbox {
-    background-color: var(--c-brand);
-    color: white;
-    position: absolute;
-    top: 40%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    opacity: 0;
-}
-
-.portfolio-item:hover .iconbox {
-    opacity: 1;
-    top: 50%;
-}
-
-.review small {
-    font-weight: 600;
-    text-transform: uppercase;
-    color: var(--c-brand);
-}
-
-.review-head {
-    position: relative;
-}
-
-.review-head::after {
-    content: "";
-    width: 28px;
-    height: 28px;
-    position: absolute;
-    bottom: -14px;
-    background-color: white;
-    transform: rotate(45deg);
-}
-
 .team-member-content {
     background-color: var(--c-brand);
     position: absolute;
@@ -234,28 +199,6 @@ img {
 #contact {
     position: relative;
     z-index: 2;
-}
-
-#contact::after {
-    content: "";
-    width: 100%;
-    height: 70%;
-    background: linear-gradient(rgba(var(--c-brand-rgb), 0.8), rgba(var(--c-brand-rgb), 0.8)), url(../images/counter.jpg);
-    background-position: center;
-    background-size: cover;
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: -1;
-}
-
-#contact .form-control {
-    border-radius: 0;
-}
-
-#contact .form-control:focus {
-    box-shadow: none;
-    border-color: var(--c-brand);
 }
 
 footer {
