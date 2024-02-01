@@ -7,3 +7,12 @@ input {
 .card {
     background-color: var(--very-light-brown);
 }
+
+.spendWiseLink {
+    background-color: var(--c-brand);
+    color: var(--very-light-brown);
+}
+
+.signInUpText {
+    color: var(--very-light-brown);
+}

@@ -33,14 +33,13 @@ require_once __DIR__ . '/../../middleware/middleware-not-authenticated.php';
     }
     ?>
   </section>
+  
   <div class="px-4 py-5 px-md-5 text-center text-lg-start">
     <div class="container">
       <div class="row gx-lg-5 align-items-center">
-        <div class="col-lg-6 mb-5 mb-lg-0 text-purple">
-          <div class="d-flex justify-content-center">
-            <a class="text-decoration-none" href="../../landingPage">
-              <h1 class="fw-bold" style="color: var(--c-brand)">SPENDWISE</h1>
-            </a>
+        <div class="col-lg-6 mb-5 mb-lg-0">
+          <div class="d-flex justify-content-center rounded spendWiseLink">
+            <a class="text-decoration-none spendWiseLink" href="../../landingPage"><h1 class="fw-bold">SPENDWISE</h1></a>
           </div>
         </div>
         <div class="col-lg-6 mb-5 mb-lg-0">
@@ -74,7 +73,7 @@ require_once __DIR__ . '/../../middleware/middleware-not-authenticated.php';
                   <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirm password">
                 </div>
                 <div class="d-flex justify-content-center mb-3">
-                  <button class="w-50 btn btn-lg btn-brown mb-2" type="submit" name="user" value="signUp">Sign Up</button>
+                  <button class="w-50 btn btn-lg btn-brown mb-2 signInUpText" type="submit" name="user" value="signUp">Sign Up</button>
                 </div>
                 <div class="d-flex justify-content-center mb-2">
                   <label class="d-flex">Already have an account? Log in <a class="hereLink" href="./signin.php"> here</a>.</label>
