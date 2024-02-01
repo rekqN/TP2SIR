@@ -1,10 +1,21 @@
 <?php
-require_once __DIR__ . '/../../infra/middlewares/middleware-not-authenticated.php';
-$title = '- Sign Up';
-include_once __DIR__ . '../../../templates/header.php'; ?>
+require_once __DIR__ . '/../../middleware/middleware-not-authenticated.php';
+?>
 
-<main>
-  <section>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SpendWise - Sign up</title>
+  <link rel="icon" href="../../landingPage/assets/images/icon-1.png" type="image/x-icon">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"/>
+  <link rel="stylesheet" href="../pageResources/styles/globalStyling.css"/>
+  <link rel="stylesheet" href="../pageResources/styles/publicPages.css"/>
+</head>
+
+<body style="background-image: url('../../landingPage/assets/images/hero-2.jpg')" class="py-5">
+  <section class="py-4 px-5">
     <?php
     if (isset($_SESSION['success'])) {
       echo '<div class="alert alert-success alert-dismissible fade show" role="alert">';
@@ -22,31 +33,58 @@ include_once __DIR__ . '../../../templates/header.php'; ?>
     }
     ?>
   </section>
-  <form action="/crud/controllers/auth/signup.php" method="post">
-    <h1 class="h3 mb-3 fw-normal">Sign Up</h1>
-    <div class="form-floating mb-2">
-      <input type="text" class="form-control" name="name" placeholder="name" maxlength="100" size="100"
-        value="<?= isset($_REQUEST['name']) ? $_REQUEST['name'] : null ?>" required>
-      <label for="name">Name</label>
+  <div class="px-4 py-5 px-md-5 text-center text-lg-start">
+    <div class="container">
+      <div class="row gx-lg-5 align-items-center">
+        <div class="col-lg-6 mb-5 mb-lg-0 text-purple">
+          <div class="d-flex justify-content-center">
+            <a class="text-decoration-none" href="../../landingPage">
+              <h1 class="fw-bold" style="color: var(--c-brand)">SPENDWISE</h1>
+            </a>
+          </div>
+        </div>
+        <div class="col-lg-6 mb-5 mb-lg-0">
+          <div class="card" style="background-color: var(--very-light-brown);">
+            <div class="card-body py-5 px-md-5">
+              <form action="../../controllers/auth/signup.php" method="post">
+                <div class="row">
+                  <div class="col-md-6">
+                    <div class="form-outline mb-3">
+                        <label class="mb-2" for="firstName">First Name</label>
+                        <input type="text" class="form-control" name="firstName" placeholder="First Name" maxlength="100" size="100" value="<?= isset($_REQUEST['firstName']) ? $_REQUEST['firstName'] : null ?>" required>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="form-outline mb-3">
+                        <label class="mb-2" for="lastName">Last Name</label>
+                        <input type="text" class="form-control" name="lastName" placeholder="Last Name" maxlength="100" size="100" value="<?= isset($_REQUEST['lastName']) ? $_REQUEST['lastName'] : null ?>" required>
+                    </div>
+                  </div>
+                </div>
+                <div class="form-outline mb-3">
+                  <label class="mb-2" for="floatingInput">Email Address</label>
+                  <input type="email" class="form-control" id="floatingInput" name="email" placeholder="spend@wise.com" value="<?= isset($_REQUEST['emailAddress']) ? $_REQUEST['emailAddress'] : null ?>">
+                </div>
+                <div class="form-outline mb-3">
+                  <label class="mb-2" for="password">Password</label>
+                  <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+                </div>
+                <div class="form-outline mb-3">
+                  <label class="mb-2" for="confirm_password">Confirm Password</label>
+                  <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirm password">
+                </div>
+                <div class="d-flex justify-content-center mb-3">
+                  <button class="w-50 btn btn-lg btn-brown mb-2" type="submit" name="user" value="signUp">Sign Up</button>
+                </div>
+                <div class="d-flex justify-content-center mb-2">
+                  <label class="d-flex">Already have an account? Log in <a class="hereLink" href="./signin.php"> here</a>.</label>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <div class="form-floating mb-2">
-      <input type="email" class="form-control" id="floatingInput" name="email" placeholder="name@example.com"
-        value="<?= isset($_REQUEST['email']) ? $_REQUEST['email'] : null ?>">
-      <label for="floatingInput">Email</label>
-    </div>
-    <div class="form-floating mb-2">
-      <input type="password" class="form-control" id="password" name="password" placeholder="Password">
-      <label for="password">Password</label>
-    </div>
-    <div class="form-floating mb-2">
-      <input type="password" class="form-control" id="confirmar_palavra_passe" name="confirmar_palavra_passe"
-        placeholder="Confirm password">
-      <label for="confirmar_palavra_passe">Confirm Password</label>
-    </div>
-    <button class="w-100 btn btn-lg btn-success mb-2" type="submit" name="user" value="signUp">Sign Up</button>
-  </form>
-  <a href="/crud/"><button class="w-100 btn btn-lg btn-info">Back</button></a>
-</main>
-<?php
-include_once __DIR__ . '../../../templates/footer.php'; ?>
-?>
+  </div>
+</body>
+</html>

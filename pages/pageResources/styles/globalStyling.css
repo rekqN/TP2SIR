@@ -1,7 +1,13 @@
-.btn-blueviolet {
-    background-color: blueviolet;
+:root {
+  --c-brand: #453A30;
+  --very-light-brown: #D5CCC3;
+  --even-lighter-brown: #f1ece7;
+}
+
+.btn-brown {
+    background-color: #453A30;
     color: white;
-    border-color: blueviolet;
+    border-color: #453A30;
   }
   
   .btn-blueviolet:hover {
@@ -49,4 +55,10 @@
   
   .card-style:focus {
     box-shadow: 0 0 0 0.2rem rgba(138, 43, 226, 0.25); /* Adiciona uma sombra sutil ao focar */
+  }
+
+  .hereLink {
+    text-decoration: none;
+    margin-right: 0.05rem;
+    margin-left: 0.25rem
   }

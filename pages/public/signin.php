@@ -9,12 +9,12 @@ require_once __DIR__ . '/../../middleware/middleware-not-authenticated.php';
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SpendWise - Sign In</title>
     <link rel="icon" href="../../landingPage/assets/images/icon-1.png" type="image/x-icon">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" integrity="sha512-z3gLpd7yknf1YoNbCzqRKc4qyor8gaKU1qmn+CShxbuBusANI9QpRohGBreCFkKxLhei6S9CQXFEbbKuqLg0DA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <link rel="stylesheet" href="../pageResources/styles/global.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../pageResources/styles/globalStyling.css">
+    <link rel="stylesheet" href="../pageResources/styles/publicPages.css"/>
   </head>
     
-  <body style="background-image: url('../../landingPage/assets/images/hero-3.jpg')" class="py-5">
+  <body style="background-image: url('../../landingPage/assets/images/hero-2.jpg')" class="py-5">
     <section class="py-4 px-5">
       <?php
         if (isset($_SESSION['errors'])) {
@@ -33,44 +33,29 @@ require_once __DIR__ . '/../../middleware/middleware-not-authenticated.php';
         <div class="row gx-lg-5 align-items-center">
           <div class="col-lg-6 mb-5 mb-lg-0">
             <div class="d-flex justify-content-center">
-              <a class="text-decoration-none" href="../../index.php">
-                <h1 class="fw-bold" style="color: blueviolet">SPEND WISE</h1>
+              <a class="text-decoration-none" href="../../landingPage">
+                <h1 class="fw-bold" style="color: var(--c-brand)">SPEND WISE</h1>
               </a>
             </div>
           </div>
 
           <div class="col-lg-6 mb-5 mb-lg-0">
             <div class="card">
-              <div class="card-body py-5 px-md-5">
+              <div class="card-body py-5 px-md-5" >
                 <form action="../../controllers/auth/signin.php" method="post">
                   <div class="form-outline mb-4">
                     <label class="mb-2" for="Email">Email Adress</label>
-                    <input type="email" class="form-control" id="Email" placeholder="Email" name="email" maxlength="255" value="<?= isset($_REQUEST['email']) ? $_REQUEST['email'] : null ?>">
+                    <input type="email" class="form-control" id="Email" placeholder="Email" name="email" maxlength="255" value="<?= isset($_REQUEST['emailAdress']) ? $_REQUEST['emailAddress'] : null ?>">
                   </div>
                   <div class="form-outline mb-4">
                     <label class="mb-2" for="password">Password</label>
                     <input type="password" class="form-control" id="password" placeholder="Password" name="password" maxlength="255" value="<?= isset($_REQUEST['password']) ? $_REQUEST['password'] : null ?>">
                   </div>
-                  <div class="form-check d-flex justify-content-start mb-4">
-                    <div class="justify-content-start">
-                      <input class="form-check-input" type="checkbox" id="remember-me">
-                    </div>
-                    <div class="justify-content-end">
-                      <label class="form-check-label" for="remember-me">
-                        Remember me
-                      </label>
-                    </div>          
-                  </div>
-
-                  <!-- Submit button -->
                   <div class="d-flex justify-content-center">
-                    <button class="w-50 btn btn-lg btn-blueviolet mb-4" type="submit" name="user" value="login">Sign In</button>
+                    <button class="w-50 btn btn-lg btn-brown mb-4" type="submit" name="user" value="login">Sign In</button>
                   </div>
                   <div class="d-flex justify-content-center mb-2">
-                    Create an account 
-                    <a href="./signup.php" class="text-decoration-none mx-1" style="color:blueviolet;">
-                        here
-                    </a>
+                    Don't have an account? Create one <a href="./signup.php" class="hereLink">here</a>.
                   </div>
                 </form>
               </div>
