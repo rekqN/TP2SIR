@@ -14,7 +14,7 @@ require_once __DIR__ . '/../../middleware/middleware-not-authenticated.php';
     <link rel="stylesheet" href="../pageResources/styles/publicPages.css"/>
   </head>
     
-  <body style="background-image: url('../../landingPage/assets/images/hero-2.jpg')" class="py-5">
+  <body class="py-5">
     <section class="py-4 px-5">
       <?php
         if (isset($_SESSION['errors'])) {

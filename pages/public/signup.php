@@ -14,7 +14,7 @@ require_once __DIR__ . '/../../middleware/middleware-not-authenticated.php';
   <link rel="stylesheet" href="../pageResources/styles/publicPages.css"/>
 </head>
 
-<body style="background-image: url('../../landingPage/assets/images/hero-2.jpg')" class="py-5">
+<body class="py-5">
   <section class="py-4 px-5">
     <?php
     if (isset($_SESSION['success'])) {
@@ -43,7 +43,7 @@ require_once __DIR__ . '/../../middleware/middleware-not-authenticated.php';
           </div>
         </div>
         <div class="col-lg-6 mb-5 mb-lg-0">
-          <div class="card" style="background-color: var(--very-light-brown);">
+          <div class="card">
             <div class="card-body py-5 px-md-5">
               <form action="../../controllers/auth/signup.php" method="post">
                 <div class="row">

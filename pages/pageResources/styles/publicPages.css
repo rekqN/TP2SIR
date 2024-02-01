@@ -1,5 +1,9 @@
 @import url('globalStyling.css');
 
+body {
+    background-image: url('../../../landingPage/assets/images/hero-2.jpg')
+}
+
 input {
     background-color: var(--even-lighter-brown) !important;
 }
