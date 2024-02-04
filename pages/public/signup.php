@@ -62,15 +62,15 @@ require_once __DIR__ . '/../../middleware/middleware-not-authenticated.php';
                 </div>
                 <div class="form-outline mb-3">
                   <label class="mb-2" for="floatingInput">Email Address</label>
-                  <input type="email" class="form-control" id="floatingInput" name="email" placeholder="spend@wise.com" value="<?= isset($_REQUEST['emailAddress']) ? $_REQUEST['emailAddress'] : null ?>">
+                  <input type="email" class="form-control" id="floatingInput" name="emailAddress" placeholder="spend@wise.com" value="<?= isset($_REQUEST['emailAddress']) ? $_REQUEST['emailAddress'] : null ?>">
                 </div>
                 <div class="form-outline mb-3">
                   <label class="mb-2" for="password">Password</label>
                   <input type="password" class="form-control" id="password" name="password" placeholder="Password">
                 </div>
                 <div class="form-outline mb-3">
-                  <label class="mb-2" for="confirm_password">Confirm Password</label>
-                  <input type="password" class="form-control" id="confirm_password" name="confirm_password" placeholder="Confirm password">
+                  <label class="mb-2" for="confirmPassword">Confirm Password</label>
+                  <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirm password">
                 </div>
                 <div class="d-flex justify-content-center mb-3">
                   <button class="w-50 btn btn-lg btn-brown mb-2 signInUpText" type="submit" name="user" value="signUp">Sign Up</button>

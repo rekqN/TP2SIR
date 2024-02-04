@@ -42,7 +42,7 @@ require_once __DIR__ . '/../../middleware/middleware-not-authenticated.php';
                 <form action="../../controllers/auth/signin.php" method="post">
                   <div class="form-outline mb-4">
                     <label class="mb-2" for="Email">Email Adress</label>
-                    <input type="email" class="form-control" id="Email" placeholder="Email" name="email" maxlength="255" value="<?= isset($_REQUEST['emailAdress']) ? $_REQUEST['emailAddress'] : null ?>">
+                    <input type="email" class="form-control" id="Email" placeholder="spend@wise.com" name="email" maxlength="255" value="<?= isset($_REQUEST['emailAdress']) ? $_REQUEST['emailAddress'] : null ?>">
                   </div>
                   <div class="form-outline mb-4">
                     <label class="mb-2" for="password">Password</label>

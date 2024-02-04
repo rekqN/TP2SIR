@@ -9,27 +9,22 @@ $doTablesExist = true;
 
 foreach ($tablesToCheck as $table) {
     $tableExistQuery = "SHOW TABLES LIKE '$table'";
-    $doTableExistStatement = $pdo->query($tableExistQuery);
+    $doTableExistStatement = $pdo -> query($tableExistQuery);
 
-    if ($doTableExistStatement -> rowCount() == 0) {
+    if ($doTableExistStatement  ->  rowCount() == 0) {
         $doTablesExist = false;
         break;
     }
 }
 
 if(!$doTablesExist) {
-    $tablesToDrop = ['SHAREDEXPENSES', 'EXPENSES', 'EXPENSE', 'PAYMENTMETHODS', 'USERS'];
+    $tablesToDrop = ['SHAREDEXPENSES', 'EXPENSES', 'EXPENSECATEGORIES', 'PAYMENTMETHODS', 'USERS'];
 
     foreach ($tablesToDrop as $table) {
-        $pdo->exec("DROP TABLE IF EXISTS $table;");
+        $pdo -> exec("DROP TABLE IF EXISTS $table;");
     }
 
-    foreach ($tablesToDrop as $table) {
-        $pdo->exec("DROP TABLE IF EXISTS $table;");
-    }
-
-    $pdo->exec('
-        CREATE TABLE USERS (
+    $pdo -> exec('CREATE TABLE USERS (
             userID int(20) UNSIGNED NOT NULL AUTO_INCREMENT,
             firstName varchar(255) NOT NULL,
             lastName varchar(255) NOT NULL,
@@ -43,7 +38,7 @@ if(!$doTablesExist) {
             updatedAt timestamp NULL DEFAULT NULL,
             deletedAt timestamp NULL DEFAULT NULL,
             PRIMARY KEY (userID),
-            UNIQUE KEY users_id_unique (id)
+            UNIQUE KEY uniqueUsersID (userID)
         )
 
         CREATE TABLE PAYMENTMETHODS (
@@ -61,12 +56,12 @@ if(!$doTablesExist) {
         CREATE TABLE EXPENSES (
             expenseID int(20) UNSIGNED NOT NULL AUTO_INCREMENT,
             expenseCategoryID int(20) UNSIGNED NOT NULL,
-            expenseDescription varchar(255) NOT NULL,
             paymentMethodID int(20) UNSIGNED NOT NULL,
+            expenseDescription varchar(255) NOT NULL,
             paidAmount decimal(10,2) NOT NULL,
             paymentDate date NOT NULL,
-            fullyPaid BOOLEAN NOT NULL DEFAULT false,
-            notes varchar(255) DEFAULT NULL,
+            isFullyPaid BOOLEAN NOT NULL DEFAULT false,
+            expenseNotes varchar(255) DEFAULT NULL,
             userID int(20) UNSIGNED NOT NULL,
             createdAt timestamp NULL DEFAULT NULL,
             updatedAt timestamp NULL DEFAULT NULL,
@@ -75,9 +70,9 @@ if(!$doTablesExist) {
             KEY expenses_category_id_foreign_key (expenseCategoryID),
             KEY expenses_payment_id_foreign_key (paymentMethodID),
             KEY expenses_user_id_foreign_key (userID),
-            CONSTRAINT expensesCategoryIDForeignKey FOREIGN KEY (expenseCategoryID) REFERENCES categories (expenseCategoryID),
-            CONSTRAINT expensesPaymentMethodIDForeignKey FOREIGN KEY (paymentMethodID) REFERENCES methods (paymentMethodID),
-            CONSTRAINT expensesUserIDForeignKey FOREIGN KEY (userID) REFERENCES users (userID)
+            CONSTRAINT expensesCategoryIDForeignKey FOREIGN KEY (expenseCategoryID) REFERENCES EXPENSECATEGORIES (expenseCategoryID),
+            CONSTRAINT expensesPaymentMethodIDForeignKey FOREIGN KEY (paymentMethodID) REFERENCES PAYMENTMETHODS (paymentMethodID),
+            CONSTRAINT expensesUserIDForeignKey FOREIGN KEY (userID) REFERENCES USERS (userID)
         )
         
         CREATE TABLE SHAREDEXPENSES (
@@ -92,9 +87,9 @@ if(!$doTablesExist) {
             KEY sharedExpensesSentToUserIDForeignKey (sentToUserID),
             KEY sharedExpensesFromUserIDForeignKey (fromUserID),
             KEY sharedExpensesExpenseIDForeignKey (expenseID),
-            CONSTRAINT sharedExpensesSentToUserIDForeignKey FOREIGN KEY (sentToUserID) REFERENCES users (id),
-            CONSTRAINT sharedExpensesFromUserIDForeignKey FOREIGN KEY (fromUserID) REFERENCES users (id),
-            CONSTRAINT sharedExpensesExpenseIDForeignKey FOREIGN KEY (expenseID) REFERENCES expenses (expenseID),
+            CONSTRAINT sharedExpensesSentToUserIDForeignKey FOREIGN KEY (sentToUserID) REFERENCES USERS (userID),
+            CONSTRAINT sharedExpensesFromUserIDForeignKey FOREIGN KEY (fromUserID) REFERENCES USERS (userID),
+            CONSTRAINT sharedExpensesExpenseIDForeignKey FOREIGN KEY (expenseID) REFERENCES EXPENSES (expenseID),
             CONSTRAINT usersUnicity CHECK (sentToUserID <> fromUserID)
         )
     ');
@@ -117,35 +112,10 @@ if(!$doTablesExist) {
     foreach ($insertUser as $user) {
         $user['password'] = password_hash($user['password'], PASSWORD_DEFAULT);
 
-        $sqlCreateUser = "INSERT INTO 
-            users (
-                firstName,
-                lastName, 
-                password,
-                avatar,
-                emailAddress,
-                country,
-                dateOfBirth,
-                isAdmin,
-                createdAt,
-                updatedAt
-            ) 
-            VALUES (
-                :firstName,
-                :lastName,  
-                :password,
-                :avatar,
-                :emailAddress,
-                :country,
-                :dateOfBirth,
-                :isAdmin,
-                :createdAt,
-                :updatedAt
-            )";
+        $sqlCreateUser = "INSERT INTO USERS (firstName, lastName, password, avatar, emailAddress, country, dateOfBirth, isAdmin, createdAt, updatedAt) VALUES (:firstName, :lastName, :password, :avatar, :emailAddress, :country, :dateOfBirth, :isAdmin, :createdAt, :updatedAt)";
+        $PDOStatementUser = $pdo -> prepare($sqlCreateUser);
 
-        $PDOStatementUser = $pdo->prepare($sqlCreateUser);
-
-        $successUser = $PDOStatementUser->execute([
+        $successUser = $PDOStatementUser -> execute([
             ':firstName' => $user['firstName'],
             ':lastName' => $user['lastName'],
             ':password' => $user['password'],
@@ -164,29 +134,26 @@ if(!$doTablesExist) {
     }
 
     $categoriesToInsert = [
-        ['description' => 'General'],        
-        ['description' => 'Food'],
-        ['description' => 'Transportation'],
-        ['description' => 'Utilities'],
-        ['description' => 'Entertainment'],
-        ['description' => 'Rent'],
-        ['description' => 'Insurance'],        
-        ['description' => 'Mechanic'],        
-        ['description' => 'Payroll Taxes'],        
-        ['description' => 'Healthcare'],        
-        ['description' => 'Investing'],        
-        ['description' => 'Debt Payments'],        
-        ['description' => 'Personal'],        
-        ['description' => 'Miscellaneous'],        
-        ['description' => 'Communication'],      
-        ['description' => 'Housing'], 
-        ['description' => 'Other'],     
+        ['expenseCategory' => 'General'],
+        ['expenseCategory' => 'Food'],
+        ['expenseCategory' => 'Transportation'],
+        ['expenseCategory' => 'Utilities'],
+        ['expenseCategory' => 'Entertainment'],
+        ['expenseCategory' => 'Rent'],
+        ['expenseCategory' => 'Car'],
+        ['expenseCategory' => 'Insurence'],
+        ['expenseCategory' => 'Payroll Taxes'],
+        ['expenseCategory' => 'Healthcare'],
+        ['expenseCategory' => 'Debt Payments'],
+        ['expenseCategory' => 'Personal'],
+        ['expenseCategory' => 'Communication'],
+        ['expenseCategory' => 'Housing'], 
+        ['expenseCategory' => 'Wife'],
+        ['expenseCategory' => 'Other'], 
     ];
 
     foreach ($categoriesToInsert as $category) {
-        $CreateQuery = "INSERT INTO categories (expenseCategory, createdAt, updatedAt) 
-                                VALUES (:expenseCategory, NOW(), NOW())";
-        
+        $CreateQuery = "INSERT INTO EXPENSECATEGORIES (expenseCategory, createdAt, updatedAt) VALUES (:expenseCategory, NOW(), NOW())";
         $Statement = $pdo -> prepare($CreateQuery);
 
         $Success = $Statement -> execute([
