@@ -157,7 +157,7 @@ if(!$doTablesExist) {
         ]);
 
         if (!$Success) {
-            echo "Error adding a category: ".implode(" - ", $Statment -> errorInfo()).PHP_EOL;
+            echo "Error adding a category: ".implode(" - ", $Statement -> errorInfo()).PHP_EOL;
         }
     }
 }
