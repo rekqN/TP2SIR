@@ -160,4 +160,25 @@ if(!$doTablesExist) {
             echo "Error adding a category: ".implode(" - ", $Statement -> errorInfo()).PHP_EOL;
         }
     }
+
+    $paymentMethodsToInsert = [
+        ['paymentMethod' => 'Cash'],
+        ['paymentMethod' => 'Credit Card'],
+        ['paymentMethod' => 'PayPal'],
+        ['paymentMethod' => 'MB WAY'],
+        ['paymentMethod' => 'Cash APP'],
+    ];
+
+    foreach ($paymentMethodsToInsert as $paymentMethodsData) {
+        $CreateQuery = "INSERT INTO PAYMENTMETHODS (paymentMethod) VALUES (:paymentMethod)";
+        $Statement = $pdo -> prepare($CreateQuery);
+
+        $Sucess = $Statement -> execute([
+            ':paymentMethod' => $paymentMethodsData['paymentMethod']
+        ]);
+
+        if (!$Sucess) {
+            echo "Error adding a payment method: " . implode(" - ", $Statement -> errorInfo()) . PHP_EOL;
+        }
+    }
 }
