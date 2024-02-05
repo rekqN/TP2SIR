@@ -28,7 +28,7 @@ function signUp($req)
 
                 setcookie("userID", $data['userID'], time() + (60 * 60 * 24 * 30), "/");
                 setcookie("firstName", $data['firstName'], time() + (60 * 60 * 24 * 30), "/");
-                header('location: /projeto_sir/pages/secure/dashboard-user.php');
+                header('location: /projeto_sir/pages/secure/userDashboard.php');
             }
         }
     }

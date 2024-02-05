@@ -1,17 +1,18 @@
-<?php
-    require_once __DIR__ . '../../middleware/middleware-user.php';
-    @require_once __DIR__ . '../../validations/session.php';
-    @require_once __DIR__ . '../../repositories/userDashboardRepository.php';
+<?phpexpensesCount
+    require_once __DIR__ . '/../../middleware/middleware-user.php';
+    @require_once __DIR__ . '/../../validations/session.php';
+    @require_once __DIR__ . '/../../repositories/userDashboardRepository.php';
     $userID = user();
 
-    $expensesCount = getExpensesCountById($userID['userID']);
-    $paidExpensesCount = getPaidExpensesCountById($userID['userID']);
-    $sharedExpensesCountByMe = getSharedExpensesCountBySharerId($userID['userID']);
-    $sharedExpensesCountToMe = getSharedExpensesCountByReceiverId($userID['userID']);
-    $sumExpensesAmount = getAmountExpensesById($userID['userID']);
-    $sumSharedExpensesAmount = getAmountSharedExpensesById($userID['userID']);
-    $futureExpenses = getFutureExpensesCountById($userID['userID']);
-    $futureExpensesDetails = getFutureExpensesDetailsById($userID['userID']);
+    $countExpenses = countExpensesByUserID($userID['userID']);
+    var_dump($countExpenses);
+    $fullyPaidExpenses = countFullyPaidExpensesByUserID($userID['userID']);
+    $sharedExpensesCountByMe = countSharedExpensesByFromUserID($userID['userID']);
+    $sharedExpensesCountToMe = countSharedExpensesBySentoToUserID($userID['userID']);
+    $sumExpensesAmount = getExpensesAmountByUserID($userID['userID']);
+    $sumSharedExpensesAmount = getSharedExpensesAmountByUserID($userID['userID']);
+    $futureExpenses = countFutureExpensesByUserID($userID['userID']);
+    $futureExpensesDetails = getFutureExpensesDetailsByUserID($userID['userID']);
 ?>
 
 <?php include __DIR__ . '/sidebar.php'; ?>
@@ -93,7 +94,7 @@
         <div class="col">
             <div class="card style">
                 <div class="card-body">
-                    <h6 class="card-title">Number of paid expenses: <?php echo $paidExpensesCount; ?></h6>
+                    <h6 class="card-title">Number of paid expenses: <?php echo $fullyPaidExpenses; ?></h6>
                 </div>
             </div>
         </div>

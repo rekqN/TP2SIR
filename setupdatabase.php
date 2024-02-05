@@ -39,19 +39,19 @@ if(!$doTablesExist) {
             deletedAt timestamp NULL DEFAULT NULL,
             PRIMARY KEY (userID),
             UNIQUE KEY uniqueUsersID (userID)
-        )
+        );
 
         CREATE TABLE PAYMENTMETHODS (
             paymentMethodID int(20) UNSIGNED NOT NULL AUTO_INCREMENT,
             paymentMethod varchar(255) NOT NULL,
             PRIMARY KEY (paymentMethodID)
-        )
+        );
 
         CREATE TABLE EXPENSECATEGORIES (
             expenseCategoryID int(20) UNSIGNED NOT NULL AUTO_INCREMENT,
             expenseCategory varchar(255) NOT NULL,
             PRIMARY KEY (expenseCategoryID)
-        )
+        );
 
         CREATE TABLE EXPENSES (
             expenseID int(20) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -73,7 +73,7 @@ if(!$doTablesExist) {
             CONSTRAINT expensesCategoryIDForeignKey FOREIGN KEY (expenseCategoryID) REFERENCES EXPENSECATEGORIES (expenseCategoryID),
             CONSTRAINT expensesPaymentMethodIDForeignKey FOREIGN KEY (paymentMethodID) REFERENCES PAYMENTMETHODS (paymentMethodID),
             CONSTRAINT expensesUserIDForeignKey FOREIGN KEY (userID) REFERENCES USERS (userID)
-        )
+        );
         
         CREATE TABLE SHAREDEXPENSES (
             sharedExpenseID int(20) UNSIGNED NOT NULL AUTO_INCREMENT,
@@ -91,7 +91,7 @@ if(!$doTablesExist) {
             CONSTRAINT sharedExpensesFromUserIDForeignKey FOREIGN KEY (fromUserID) REFERENCES USERS (userID),
             CONSTRAINT sharedExpensesExpenseIDForeignKey FOREIGN KEY (expenseID) REFERENCES EXPENSES (expenseID),
             CONSTRAINT usersUnicity CHECK (sentToUserID <> fromUserID)
-        )
+        );
     ');
         
     $insertUser= [

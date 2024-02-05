@@ -5,22 +5,22 @@ function countExpensesByUserID($userID) {
     global $pdo;
 
     $stmt = $pdo -> prepare("SELECT COUNT(*) AS countExpenses FROM EXPENSES WHERE userID = :userID AND isFullyPaid = 0 AND deletedAt IS NULL");
-    $stmt -> bindParam(':userId', $userID, PDO::PARAM_INT);
+    $stmt -> bindParam(':userID', $userID, PDO::PARAM_INT);
     $stmt -> execute();
 
     $result = $stmt  ->  fetch(PDO::FETCH_ASSOC);
-    return $result['expenseCount'];
+    return $result['countExpenses'];
 }
 
 function countFullyPaidExpensesByUserID($userID) {
     global $pdo;
 
-    $stmt = $pdo -> prepare("SELECT COUNT(*) AS countFullyPaidExpenses FROM EXPENSES WHERE userID = :userID AND isFullyPaid = 1 AND deletedAt IS NULL");
+    $stmt = $pdo -> prepare("SELECT COUNT(*) AS fullyPaidExpenses FROM EXPENSES WHERE userID = :userID AND isFullyPaid = 1 AND deletedAt IS NULL");
     $stmt -> bindParam(':userID', $userID, PDO::PARAM_INT);
     $stmt -> execute();
 
     $result = $stmt -> fetch(PDO::FETCH_ASSOC);
-    return $result['paidExpenseCount'];
+    return $result['fullyPaidExpenses'];
 }
 
 function getExpensesAmountByUserID($userID) {
@@ -66,7 +66,7 @@ function getSharedExpensesAmountByUserID($userID) {
                 WHERE SHAREDEXPENSES.sentToUserID = :userID AND SHAREDEXPENSES.deletedAt IS NULL AND EXPENSES.deletedAt IS NULL AND EXPENSES.isFullyPaid = 0";
 
         $stmt = $pdo -> prepare($query);
-        $stmt -> bindParam(':userID', $userId, PDO::PARAM_INT);
+        $stmt -> bindParam(':userID', $userID, PDO::PARAM_INT);
         $stmt -> execute();
 
         $result = $stmt -> fetch(PDO::FETCH_ASSOC);
@@ -83,7 +83,7 @@ function countFutureExpensesByUserID($userID)
     global $pdo;
 
     $stmt = $pdo -> prepare("SELECT COUNT(*) AS countFutureExpenses FROM EXPENSES WHERE userID = :userID AND date > NOW() AND isFullyPaid = 0 AND deletedAt IS NULL");
-    $stmt -> bindParam(':userID', $userId, PDO::PARAM_INT);
+    $stmt -> bindParam(':userID', $userID, PDO::PARAM_INT);
     $stmt -> execute();
 
     $result = $stmt -> fetch(PDO::FETCH_ASSOC);
