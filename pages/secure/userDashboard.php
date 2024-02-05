@@ -17,14 +17,15 @@
 <?php include __DIR__ . '/sidebar.php'; ?>
 
 <style>
+@import url('/../pageResources/globalStyling.css');
 .style {
     background-color: white;
-    background: linear-gradient(to right, #8a5bff, #e35bff);
+    background: var(--c-brand);
     border-radius: 10px;
 }
 
 .style:hover {
-    background-color: blueviolet;
+    background-color: var(--very-light-brown);
     color: white;
 }
 

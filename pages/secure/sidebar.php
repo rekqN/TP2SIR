@@ -21,6 +21,7 @@
 </head>
 
 <style>
+@import url('/../pageResources/globalStyling.css');
 html,
 body {
     height: 100%;
@@ -28,11 +29,11 @@ body {
 }
 
 .mynav {
-    color: #fff;
+    color: var(--very-light-brown);
 }
 
 .mynav li a {
-    color: #fff;
+    color: var(--very-light-brown);
     text-decoration: none;
     width: 100%;
     display: block;
@@ -61,8 +62,7 @@ body {
             class="d-flex flex-column flex-shrink-0 p-3 bg-color text-white offcanvas-md offcanvas-start"
             style="width: 270px;">
             <a href="#" class="navbar-brand">
-                <h5 class="h6" style="color:blueviolet"><i class="fa-solid fa-wallet me-2"
-                        style="font-size: 18px;"></i>SPENDWISE</h5>
+                <h5 class="h6" style="color: var(--very-light-brown)"><i class="fa-solid fa-wallet me-2" style="font-size: 18px;"></i>SPENDWISE</h5>
             </a>
             <hr>
             <ul class="mynav nav nav-pills flex-column mb-auto">
@@ -132,17 +132,15 @@ body {
                     <?php if (!empty($user['avatar'])): ?>
                     <?php
                             $avatarData = base64_decode($user['avatar']);
-                            $avatarSrc = 'data:image/jpeg;base64,' . base64_encode($avatarData);
+                            $avatarSource = 'data:image/jpeg;base64,' . base64_encode($avatarData);
                         ?>
-                    <img src="<?= $avatarSrc ?>" alt="avatar" class="img-fluid rounded-circle me-2" width="50px">
+                    <img src="<?= $avatarSource ?>" alt="avatar" class="img-fluid rounded-circle me-2" width="50px">
                     <?php else: ?>
                     <i class="fas fa-user-circle fa-3x me-2 text-secondary"></i>
                     <?php endif;?>
 
                     <span>
-                        <h6 class="mt-2 mb-0">
-                            <?= mb_strlen($user['firstName'] ?? '') > 16 ? substr($user['firstName'], 0, 16) . '...' : $user['firstName'] ?? 'Guest' ?>
-                        </h6>
+                        <h6 class="mt-2 mb-0" style="color: var(--very-light-brown); font-size: 20px;"><?= mb_strlen($user['firstName'] ?? '') > 16 ? substr($user['firstName'], 0, 16) . '...' : $user['firstName'] ?? 'Guest' ?></h6>
                         <small><?= $user['emailAdrress'] ?? null ?></small>
                     </span>
                 </div>
@@ -150,7 +148,7 @@ body {
                 <div class="ms-auto">
                     <form action="../../controllers/auth/signin.php" method="post">
                         <button class="btn btn-outline-danger btn-sm" type="submit" name="user" value="logout">
-                            <i class="fas fa-sign-out-alt" style="color: white; font-size: 15px;"></i>
+                            <i class="fas fa-sign-out-alt" style="color: var(--very-light-brown); font-size: 15px;"></i>
                         </button>
                     </form>
                 </div>
