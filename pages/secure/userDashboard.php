@@ -1,4 +1,4 @@
-<?phpexpensesCount
+<?php
     require_once __DIR__ . '/../../middleware/middleware-user.php';
     @require_once __DIR__ . '/../../validations/session.php';
     @require_once __DIR__ . '/../../repositories/userDashboardRepository.php';
@@ -20,7 +20,7 @@
 @import url('/../pageResources/globalStyling.css');
 .style {
     background-color: white;
-    background: var(--c-brand);
+    background: var(--very-light-brown);
     border-radius: 10px;
 }
 
@@ -54,6 +54,17 @@
         <div class="col">
             <div class="card style">
                 <div class="card-body">
+                    <?php
+                        $displayAmount = isset($sumExpensesAmount) && $sumExpensesAmount !== '' ? $sumExpensesAmount : '0';
+                    ?>
+                    <h6 class="card-title">Expense's Amount: <?php echo $displayAmount; ?>€</h6>
+                </div>
+            </div>
+        </div>
+
+        <div class="col">
+            <div class="card style">
+                <div class="card-body">
                     <h6 class="card-title">Number of shared expenses: <?php echo $sharedExpensesCountByMe; ?></h6>
                 </div>
             </div>
@@ -64,17 +75,6 @@
                 <div class="card-body">
                     <h6 class="card-title">Number of expenses shared with you: <?php echo $sharedExpensesCountToMe; ?>
                     </h6>
-                </div>
-            </div>
-        </div>
-
-        <div class="col">
-            <div class="card style">
-                <div class="card-body">
-                    <?php
-            $displayAmount = isset($sumExpensesAmount) && $sumExpensesAmount !== '' ? $sumExpensesAmount : '0';
-            ?>
-                    <h6 class="card-title">Expense's Amount: <?php echo $displayAmount; ?>€</h6>
                 </div>
             </div>
         </div>
@@ -100,7 +100,7 @@
                 <?php if ($futureExpenses > 0) echo 'data-bs-toggle="modal" data-bs-target="#futureDetails" style="cursor:pointer"'; ?>>
                 <div class="card-body">
                     <?php if ($futureExpenses > 0): ?>
-                    <p class="my-2">You have <?php echo $futureExpenses; ?> future expenses. Check them out!</p>
+                    <p class="my-2">You have <?php echo $futureExpenses; ?> future expenses.</p>
                     <?php else: ?>
                     <p class="my-2">No future expenses</p>
                     <?php endif; ?>

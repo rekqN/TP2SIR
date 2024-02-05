@@ -28,7 +28,7 @@ function getEmailAddresses($emailAddress)
 }
 
 
-function getIDByEmailAddress($emailAddress)
+function getUserIDByEmailAddress($emailAddress)
 {
     try {
         $sql = 'SELECT userID FROM USERS WHERE emailAddress = :emailAddress AND deletedAt IS NULL';

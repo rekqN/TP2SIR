@@ -60,7 +60,7 @@ function getSharedExpensesAmountByUserID($userID) {
     global $pdo;
 
     try {
-        $query = "SELECT SUM(EXPENSES.amount) AS sharedExpensesAmount
+        $query = "SELECT SUM(EXPENSES.paidAmount) AS sharedExpensesAmount
                 FROM SHAREDEXPENSES 
                 INNER JOIN EXPENSES ON SHAREDEXPENSES.expenseID = EXPENSES.expenseID
                 WHERE SHAREDEXPENSES.sentToUserID = :userID AND SHAREDEXPENSES.deletedAt IS NULL AND EXPENSES.deletedAt IS NULL AND EXPENSES.isFullyPaid = 0";
@@ -82,7 +82,7 @@ function countFutureExpensesByUserID($userID)
 {
     global $pdo;
 
-    $stmt = $pdo -> prepare("SELECT COUNT(*) AS countFutureExpenses FROM EXPENSES WHERE userID = :userID AND date > NOW() AND isFullyPaid = 0 AND deletedAt IS NULL");
+    $stmt = $pdo -> prepare("SELECT COUNT(*) AS countFutureExpenses FROM EXPENSES WHERE userID = :userID AND paymentDate > NOW() AND isFullyPaid = 0 AND deletedAt IS NULL");
     $stmt -> bindParam(':userID', $userID, PDO::PARAM_INT);
     $stmt -> execute();
 
