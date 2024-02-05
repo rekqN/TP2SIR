@@ -1,3 +1,7 @@
+<?php
+    require_once __DIR__ . '/../setupdatabase.php';
+?>
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -10,8 +14,10 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fancyapps/ui@4.0/dist/fancybox.css">
     <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
     <link rel="stylesheet" href="./assets/css/style.css">
+    
 </head>
 <body data-bs-spy="scroll" data-bs-target=".navbar">
+
 
     <!-- 
         

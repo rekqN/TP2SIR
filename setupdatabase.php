@@ -1,6 +1,5 @@
 <?php
-#EASY DATABASE SETUP
-require __DIR__ . '/databse/connection.php';
+require __DIR__ . '/database/connection.php';
 
 date_default_timezone_set('Europe/Lisbon');
 
@@ -9,9 +8,9 @@ $doTablesExist = true;
 
 foreach ($tablesToCheck as $table) {
     $tableExistQuery = "SHOW TABLES LIKE '$table'";
-    $doTableExistStatement = $pdo -> query($tableExistQuery);
+    $doTablesExistStatement = $pdo -> query($tableExistQuery);
 
-    if ($doTableExistStatement  ->  rowCount() == 0) {
+    if ($doTablesExistStatement -> rowCount() == 0) {
         $doTablesExist = false;
         break;
     }
@@ -31,7 +30,6 @@ if(!$doTablesExist) {
             password varchar(255) NOT NULL,
             emailAddress varchar(255) NOT NULL,
             avatar longblob NULL,
-            country varchar(255) NULL,
             dateOfBirth date NULL,
             isAdmin BOOLEAN NOT NULL DEFAULT false,
             createdAt timestamp NULL DEFAULT NULL,
@@ -99,7 +97,6 @@ if(!$doTablesExist) {
             'firstName' => 'Pinto',
             'lastName' => 'da Costa',
             'emailAddress' => 'admin@admin.admin',
-            'country' => 'Portugal',
             'dateOfBirth' => '1937/12/28',
             'password' => 'SUPER123',
             'avatar' => null,
@@ -112,7 +109,7 @@ if(!$doTablesExist) {
     foreach ($insertUser as $user) {
         $user['password'] = password_hash($user['password'], PASSWORD_DEFAULT);
 
-        $sqlCreateUser = "INSERT INTO USERS (firstName, lastName, password, avatar, emailAddress, country, dateOfBirth, isAdmin, createdAt, updatedAt) VALUES (:firstName, :lastName, :password, :avatar, :emailAddress, :country, :dateOfBirth, :isAdmin, :createdAt, :updatedAt)";
+        $sqlCreateUser = "INSERT INTO USERS (firstName, lastName, password, avatar, emailAddress, dateOfBirth, isAdmin, createdAt, updatedAt) VALUES (:firstName, :lastName, :password, :avatar, :emailAddress, :dateOfBirth, :isAdmin, :createdAt, :updatedAt)";
         $PDOStatementUser = $pdo -> prepare($sqlCreateUser);
 
         $successUser = $PDOStatementUser -> execute([
@@ -121,7 +118,6 @@ if(!$doTablesExist) {
             ':password' => $user['password'],
             ':avatar' => $user['avatar'],
             ':emailAddress' => $user['emailAddress'],
-            ':country' => $user['country'],
             ':dateOfBirth' => $user['dateOfBirth'],
             ':isAdmin' => $user['isAdmin'],
             ':createdAt' => $user['createdAt'],
@@ -153,7 +149,7 @@ if(!$doTablesExist) {
     ];
 
     foreach ($categoriesToInsert as $category) {
-        $CreateQuery = "INSERT INTO EXPENSECATEGORIES (expenseCategory, createdAt, updatedAt) VALUES (:expenseCategory, NOW(), NOW())";
+        $CreateQuery = "INSERT INTO EXPENSECATEGORIES (expenseCategory) VALUES (:expenseCategory)";
         $Statement = $pdo -> prepare($CreateQuery);
 
         $Success = $Statement -> execute([
