@@ -173,11 +173,11 @@ if(!$doTablesExist) {
         $CreateQuery = "INSERT INTO PAYMENTMETHODS (paymentMethod) VALUES (:paymentMethod)";
         $Statement = $pdo -> prepare($CreateQuery);
 
-        $Sucess = $Statement -> execute([
+        $Success = $Statement -> execute([
             ':paymentMethod' => $paymentMethodsData['paymentMethod']
         ]);
 
-        if (!$Sucess) {
+        if (!$Success) {
             echo "Error adding a payment method: " . implode(" - ", $Statement -> errorInfo()) . PHP_EOL;
         }
     }
