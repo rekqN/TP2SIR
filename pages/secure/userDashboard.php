@@ -65,7 +65,7 @@
         <div class="col">
             <div class="card style">
                 <div class="card-body">
-                    <h6 class="card-title">Number of shared expenses: <?php echo $sharedExpensesCountByMe; ?></h6>
+                    <h6 class="card-title">Number of paid expenses: <?php echo $fullyPaidExpenses; ?></h6>
                 </div>
             </div>
         </div>
@@ -73,8 +73,7 @@
         <div class="col">
             <div class="card style">
                 <div class="card-body">
-                    <h6 class="card-title">Number of expenses shared with you: <?php echo $sharedExpensesCountToMe; ?>
-                    </h6>
+                    <h6 class="card-title">Number of shared expenses: <?php echo $sharedExpensesCountByMe; ?></h6>
                 </div>
             </div>
         </div>
@@ -85,12 +84,13 @@
                     <h6 class="card-title">Amount of shared expenses: <?php echo $sumSharedExpensesAmount; ?>€</h6>
                 </div>
             </div>
-        </div>
+        </div>  
 
         <div class="col">
             <div class="card style">
                 <div class="card-body">
-                    <h6 class="card-title">Number of paid expenses: <?php echo $fullyPaidExpenses; ?></h6>
+                    <h6 class="card-title">Number of expenses shared with you: <?php echo $sharedExpensesCountToMe; ?>
+                    </h6>
                 </div>
             </div>
         </div>
