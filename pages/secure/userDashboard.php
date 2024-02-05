@@ -5,7 +5,6 @@
     $userID = user();
 
     $countExpenses = countExpensesByUserID($userID['userID']);
-    var_dump($countExpenses);
     $fullyPaidExpenses = countFullyPaidExpensesByUserID($userID['userID']);
     $sharedExpensesCountByMe = countSharedExpensesByFromUserID($userID['userID']);
     $sharedExpensesCountToMe = countSharedExpensesBySentoToUserID($userID['userID']);
@@ -21,23 +20,19 @@
 .style {
     background-color: white;
     background: linear-gradient(to right, #8a5bff, #e35bff);
-    border-color: darkviolet;
-    transition: box-shadow 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
 }
 
 .style:hover {
     background-color: blueviolet;
     color: white;
-
 }
 
 .style:hover .card-title {
     color: white;
 }
 </style>
-
+<link rel="icon" href="../../landingPage/assets/images/icon-1.png" type="image/x-icon">
 <div class="p-4 overflow-auto h-100">
     <nav style="--bs-breadcrumb-divider:'>';font-size:14px">
         <ol class="breadcrumb">

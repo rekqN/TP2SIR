@@ -4,13 +4,13 @@ require_once __DIR__ . '/../repositories/userRepository.php';
 
 function isAuthenticated()
 {
-    return isset($_SESSION['id']) ? true : false;
+    return isset($_SESSION['userID']) ? true : false;
 }
 
 function user()
 {
     if (isAuthenticated()) {
-        return getById($_SESSION['id']);
+        return getById($_SESSION['userID']);
     } else {
         return false;
     }
@@ -18,12 +18,12 @@ function user()
 
 function userId()
 {
-    return  $_SESSION['id'];
+    return  $_SESSION['userID'];
 }
 
 function administrator()
 {
     $user = user();
-    return $user['administrator'] ? true : false;
+    return $user['isadmin'] ? true : false;
 }
 ?>

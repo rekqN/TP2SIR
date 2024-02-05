@@ -1,15 +1,23 @@
 <?php
-require_once __DIR__ . '../../database/connection.php';
+require_once __DIR__ . '/../database/connection.php';
 require_once __DIR__ . '/expensesRepository.php';
 require_once __DIR__ . '/sharedExpensesRepository.php';
 
 date_default_timezone_set('Europe/Lisbon');
 
+function getById($userID)
+{
+    $PDOStatement = $GLOBALS['pdo'] -> prepare('SELECT * FROM USERS WHERE userID = ?;');
+    $PDOStatement -> bindValue(1, $userID, PDO::PARAM_INT);
+    $PDOStatement -> execute();
+    return $PDOStatement -> fetch();
+}
+
 function getEmailAddresses($emailAddress)
 {
     try {
         $sql = 'SELECT * FROM USERS WHERE emailAddress = ? LIMIT 1;';
-        $PDOStatement = $GLOBALS['pdo']->prepare($sql);
+        $PDOStatement = $GLOBALS['pdo'] -> prepare($sql);
         $PDOStatement -> bindValue(1, $emailAddress);
         $PDOStatement -> execute();
         return $PDOStatement -> fetch();
@@ -24,7 +32,7 @@ function getIDByEmailAddress($emailAddress)
 {
     try {
         $sql = 'SELECT userID FROM USERS WHERE emailAddress = :emailAddress AND deletedAt IS NULL';
-        $PDOStatement = $GLOBALS['pdo']->prepare($sql);
+        $PDOStatement = $GLOBALS['pdo'] -> prepare($sql);
         $PDOStatement -> bindParam(':emailAddress', $emailAddress, PDO::PARAM_STR);
         $PDOStatement -> execute();
 
@@ -37,32 +45,32 @@ function getIDByEmailAddress($emailAddress)
     }
 }
 
-function registerUser($user)
+function registerUser($userID)
 {
-    $user['password'] = password_hash($user['password'], PASSWORD_DEFAULT);
-    $user['isAdmin'] = false;
+    $userID['password'] = password_hash($userID['password'], PASSWORD_DEFAULT);
+    $userID['isAdmin'] = false;
 
     $sqlCreate = "INSERT INTO USERS (firstName, lastName, emailAddress, password, isAdmin, createdAt, updatedAt) VALUES (:firstName, :lastName, :emailAddress, :password, :isAdmin, NOW(), NOW())";
     $PDOStatement = $GLOBALS['pdo'] -> prepare($sqlCreate);
 
     $success = $PDOStatement -> execute([
-        ':firstName' => $user['firstName'],
-        ':lastName' => $user['lastName'],
-        ':emailAddress' => $user['emailAddress'],
-        ':password' => $user['password'],
-        ':isAdmin' => $user['isAdmin'],
+        ':firstName' => $userID['firstName'],
+        ':lastName' => $userID['lastName'],
+        ':emailAddress' => $userID['emailAddress'],
+        ':password' => $userID['password'],
+        ':isAdmin' => $userID['isAdmin'],
     ]);
 
     if ($success) {
-        $user['userID'] = $GLOBALS['pdo'] -> lastInsertId();
-        return $user;
+        $userID['userID'] = $GLOBALS['pdo'] -> lastInsertId();
+        return $userID;
     }
     return false;
 }
 
 function avatarUpdate($userID, $avatar)
 {
-    $user['updatedAt'] = date('Y-m-d H:i:s');
+    $userID['updatedAt'] = date('Y-m-d H:i:s');
 
     $sqlUpdate = "UPDATE USERS SET avatar = :avatar, updatedAt = :updatedAt WHERE userID = :userID";
     $PDOStatement = $GLOBALS['pdo'] -> prepare($sqlUpdate);
@@ -70,7 +78,7 @@ function avatarUpdate($userID, $avatar)
     $bindParams = [
         ':userID' => $userID,
         ':avatar' => $avatar,
-        ':updatedAt' => $user['updatedAt'],
+        ':updatedAt' => $userID['updatedAt'],
     ];
 
     $success = $PDOStatement -> execute($bindParams);
@@ -78,53 +86,53 @@ function avatarUpdate($userID, $avatar)
     return $success;
 }
 
-function fullUserUpdate($user)
+function fullUserUpdate($userID)
 {
     $passwordUpdate = '';
     $updateFields = [];
 
-    if (isset($user['password']) && !empty($user['password'])) {
+    if (isset($userID['password']) && !empty($userID['password'])) {
         $passwordUpdate = ', password = :password';
-        $user['password'] = password_hash($user['password'], PASSWORD_DEFAULT);
+        $userID['password'] = password_hash($userID['password'], PASSWORD_DEFAULT);
     }
 
-    $user['updatedAt'] = date('Y-m-d H:i:s');
+    $userID['updatedAt'] = date('Y-m-d H:i:s');
 
     $sqlUpdate = "UPDATE USERS SET updatedAt = :updatedAt";
 
     $bindParams = [
-        ':userID' => $user['userID'],
-        ':updatedAt' => $user['updatedAt'],
+        ':userID' => $userID['userID'],
+        ':updatedAt' => $userID['updatedAt'],
     ];
 
-    if (isset($user['firstName'])) {
+    if (isset($userID['firstName'])) {
         $sqlUpdate .= ', firstName = :firstName';
-        $bindParams[':firstName'] = $user['firstName'];
+        $bindParams[':firstName'] = $userID['firstName'];
     }
 
-    if (isset($user['lastName'])) {
+    if (isset($userID['lastName'])) {
         $sqlUpdate .= ', lastName = :lastName';
-        $bindParams[':lastName'] = $user['lastName'];
+        $bindParams[':lastName'] = $userID['lastName'];
     }
 
-    if (isset($user['emailAddress'])) {
+    if (isset($userID['emailAddress'])) {
         $sqlUpdate .= ', emailAddress = :emailAddress';
-        $bindParams[':emailAddress'] = $user['emailAddress'];
+        $bindParams[':emailAddress'] = $userID['emailAddress'];
     }
 
-    if (isset($user['country'])) {
+    if (isset($userID['country'])) {
         $sqlUpdate .= ', country = :country';
-        $bindParams[':country'] = $user['country'];
+        $bindParams[':country'] = $userID['country'];
     }
 
-    if (isset($user['dateOfBirth'])) {
+    if (isset($userID['dateOfBirth'])) {
         $sqlUpdate .= ', dateOfBirth = :dateOfBirth';
-        $bindParams[':dateOfBirth'] = $user['dateOfBirth'];
+        $bindParams[':dateOfBirth'] = $userID['dateOfBirth'];
     }
 
-    if (isset($user['isAdmin'])) {
+    if (isset($userID['isAdmin'])) {
         $sqlUpdate .= ', isAdmin = :isAdmin';
-        $bindParams[':isAdmin'] = $user['isAdmin'];
+        $bindParams[':isAdmin'] = $userID['isAdmin'];
     }
 
     $sqlUpdate .= $passwordUpdate;
@@ -139,7 +147,7 @@ function fullUserUpdate($user)
 
 function getPasswordHash($userID)
 {
-    $PDOStatement = $GLOBALS['pdo']->prepare('SELECT password FROM USERS WHERE userID = ?'); 
+    $PDOStatement = $GLOBALS['pdo'] -> prepare('SELECT password FROM USERS WHERE userID = ?'); 
     $PDOStatement -> bindValue(1, $userID, PDO::PARAM_INT);
     $PDOStatement -> execute();
         
@@ -159,7 +167,7 @@ function passwordUpdate($userID, $passwordHash)
     $bindParams = [
         ':userID' => $userID,
         ':password' => $passwordHash,
-        ':updatedAt' => $user['updatedAt'],
+        ':updatedAt' => $userID['updatedAt'],
     ];
 
     $success = $PDOStatement -> execute($bindParams);
@@ -170,7 +178,7 @@ function passwordUpdate($userID, $passwordHash)
 function deleteUser($userID)
 {
     $sqlSelectEmail = "SELECT emailAddress FROM USERS WHERE userID = :userID";
-    $selectStatement = $GLOBALS['pdo']->prepare($sqlSelectEmail);
+    $selectStatement = $GLOBALS['pdo'] -> prepare($sqlSelectEmail);
     $selectStatement -> execute([':userID' => $userID]);
     $userEmail = $selectStatement -> fetchColumn();
 
@@ -185,8 +193,8 @@ function deleteUser($userID)
     ]);
 
     if ($updateSuccess) {
-        deleteExpensesByUserID($useriD);
-        deleteSharedExpensesByUserID($useriD);
+        deleteExpensesByUserID($userID);
+        deleteSharedExpensesByUserID($userID);
     }
     return $userEmail;
 }

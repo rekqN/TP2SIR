@@ -104,7 +104,7 @@ body {
                         Profile
                     </a>
                 </li>
-                <li class="nav-item py-1 mask <?= $user['admin'] ? '' : 'd-none'; ?>">
+                <li class="nav-item py-1 mask <?= $user['isAdmin'] ? '' : 'd-none'; ?>">
                     <a href="#" class="nav-link text-white btn-side" data-bs-toggle="collapse"
                         data-bs-target="#adminDropdownMenu" aria-expanded="false">
                         <i class="fa-solid fa-users" title="Admin"></i>
@@ -141,9 +141,9 @@ body {
 
                     <span>
                         <h6 class="mt-2 mb-0">
-                            <?= mb_strlen($user['first_name'] ?? '') > 16 ? substr($user['first_name'], 0, 16) . '...' : $user['first_name'] ?? 'Guest' ?>
+                            <?= mb_strlen($user['firstName'] ?? '') > 16 ? substr($user['firstName'], 0, 16) . '...' : $user['firstName'] ?? 'Guest' ?>
                         </h6>
-                        <small><?= $user['email'] ?? null ?></small>
+                        <small><?= $user['emailAdrress'] ?? null ?></small>
                     </span>
                 </div>
 

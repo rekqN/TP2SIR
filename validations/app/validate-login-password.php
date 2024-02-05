@@ -6,8 +6,8 @@ function isLoginValid($req)
         $req[$key] =  trim($req[$key]);
     }
 
-    if (!filter_var($req['email'], FILTER_VALIDATE_EMAIL)) {
-        $errors['email'] = 'The Email field cannot be empty and must have the email format, for example: nome@example.com.';
+    if (!filter_var($req['emailAddress'], FILTER_VALIDATE_EMAIL)) {
+        $errors['emailAddress'] = 'The Email field cannot be empty and must have the email format, for example: spend@wise.com.';
     }
 
     if (empty($req['password']) || strlen($req['password']) < 6) {
@@ -23,12 +23,12 @@ function isLoginValid($req)
 
 function isPasswordValid($req)
 {
-    if (!isset($_SESSION['id'])) {
+    if (!isset($_SESSION['userID'])) {
 
-        $user = getByEmail($req['email']);
+        $user = getEmailAddresses($req['emailAddress']);
 
         if (!$user) {
-            $errors['email'] = 'Wrong email or password.';
+            $errors['emailAddress'] = 'Wrong email or password.';
         }
 
         if (!password_verify($req['password'], $user['password'])) {

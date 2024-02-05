@@ -7,7 +7,7 @@ if (!isset($_SESSION['userID'])) {
     $_SESSION['userID'] = $_COOKIE['userID'];
     $_SESSION['firstName'] = $_COOKIE['firstName'];
   } else {
-    $home_url = 'http://' . $_SERVER['HTTP_HOST'] . '/index.html/';
+    $home_url = 'http://' . $_SERVER['HTTP_HOST'] . '/projeto_sir/landingPage/';
     header('Location: ' . $home_url);
   }
 }
