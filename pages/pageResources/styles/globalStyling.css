@@ -16,18 +16,6 @@
   border-color: var(--c-brand);
 }
   
-.btn-blueviolet-reverse {
-  background-color: white;
-  color: blueviolet;
-  border-color: blueviolet;
-}
-  
-.btn-blueviolet-reverse:hover {
-  background-color: blueviolet;
-  color: white;
-  border-color: darkviolet;
-}
-  
 .btn a {
   color: inherit;
   text-decoration: none;

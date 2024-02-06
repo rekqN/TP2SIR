@@ -5,16 +5,14 @@ require_once __DIR__ . '/sharedExpensesRepository.php';
 
 date_default_timezone_set('Europe/Lisbon');
 
-function getById($userID)
-{
+function getById($userID) {
     $PDOStatement = $GLOBALS['pdo'] -> prepare('SELECT * FROM USERS WHERE userID = ?;');
     $PDOStatement -> bindValue(1, $userID, PDO::PARAM_INT);
     $PDOStatement -> execute();
     return $PDOStatement -> fetch();
 }
 
-function getEmailAddresses($emailAddress)
-{
+function getEmailAddresses($emailAddress) {
     try {
         $sql = 'SELECT * FROM USERS WHERE emailAddress = ? LIMIT 1;';
         $PDOStatement = $GLOBALS['pdo'] -> prepare($sql);
@@ -28,8 +26,7 @@ function getEmailAddresses($emailAddress)
 }
 
 
-function getUserIDByEmailAddress($emailAddress)
-{
+function getUserIDByEmailAddress($emailAddress) {
     try {
         $sql = 'SELECT userID FROM USERS WHERE emailAddress = :emailAddress AND deletedAt IS NULL';
         $PDOStatement = $GLOBALS['pdo'] -> prepare($sql);
@@ -45,8 +42,7 @@ function getUserIDByEmailAddress($emailAddress)
     }
 }
 
-function registerUser($userID)
-{
+function registerUser($userID) {
     $userID['password'] = password_hash($userID['password'], PASSWORD_DEFAULT);
     $userID['isAdmin'] = false;
 
@@ -68,9 +64,8 @@ function registerUser($userID)
     return false;
 }
 
-function avatarUpdate($userID, $avatar)
-{
-    $userID['updatedAt'] = date('Y-m-d H:i:s');
+function avatarUpdate($userID, $avatar) {
+    $updatedAt = date('Y-m-d H:i:s');
 
     $sqlUpdate = "UPDATE USERS SET avatar = :avatar, updatedAt = :updatedAt WHERE userID = :userID";
     $PDOStatement = $GLOBALS['pdo'] -> prepare($sqlUpdate);
@@ -78,16 +73,16 @@ function avatarUpdate($userID, $avatar)
     $bindParams = [
         ':userID' => $userID,
         ':avatar' => $avatar,
-        ':updatedAt' => $userID['updatedAt'],
+        ':updatedAt' => $updatedAt,
     ];
 
-    $success = $PDOStatement -> execute($bindParams);
+    $success = $PDOStatement->execute($bindParams);
 
     return $success;
 }
 
-function fullUserUpdate($userID)
-{
+
+function fullUserUpdate($userID) {
     $passwordUpdate = '';
     $updateFields = [];
 
@@ -145,8 +140,7 @@ function fullUserUpdate($userID)
     return $success;
 }
 
-function getPasswordHash($userID)
-{
+function getPasswordHash($userID) {
     $PDOStatement = $GLOBALS['pdo'] -> prepare('SELECT password FROM USERS WHERE userID = ?'); 
     $PDOStatement -> bindValue(1, $userID, PDO::PARAM_INT);
     $PDOStatement -> execute();
@@ -159,8 +153,7 @@ function getPasswordHash($userID)
     return $userData['password'];
 }
 
-function passwordUpdate($userID, $passwordHash)
-{
+function passwordUpdate($userID, $passwordHash) {
     $sqlUpdatePassword = "UPDATE USERS SET password = :password, updatedAt = :updatedAt WHERE userID = :userID";
     $PDOStatement = $GLOBALS['pdo'] -> prepare($sqlUpdatePassword);
 
@@ -175,8 +168,7 @@ function passwordUpdate($userID, $passwordHash)
     return $success;
 }
 
-function deleteUser($userID)
-{
+function deleteUser($userID) {
     $sqlSelectEmail = "SELECT emailAddress FROM USERS WHERE userID = :userID";
     $selectStatement = $GLOBALS['pdo'] -> prepare($sqlSelectEmail);
     $selectStatement -> execute([':userID' => $userID]);

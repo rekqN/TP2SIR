@@ -21,16 +21,7 @@
 .style {
     background-color: white;
     background: var(--very-light-brown);
-    border-radius: 10px;
-}
-
-.style:hover {
-    background-color: var(--very-light-brown);
-    color: white;
-}
-
-.style:hover .card-title {
-    color: white;
+    border-radius: 50px;
 }
 </style>
 <link rel="icon" href="../../landingPage/assets/images/icon-1.png" type="image/x-icon">
