@@ -25,7 +25,7 @@ function getPaymentMethodByName($paymentMethodName)
     $statement = $pdo -> prepare($query);
     $statement -> execute([':paymentMethod' => $paymentMethodName]);
 
-    $result = $statement->fetch(PDO::FETCH_ASSOC);
+    $result = $statement -> fetch(PDO::FETCH_ASSOC);
 
     return $result;
 }
@@ -34,7 +34,7 @@ function createExpense($expense)
 {
     try {
         $sqlCreate = "INSERT INTO EXPENSES ( expenseCategoryID, expenseDescription, paymentMethodID, paidAmount, paymentDate, isFullyPaid, expenseNotes, userID, createdAt, updatedAt) VALUES (:expenseCategoryID, :expenseDescription, :paymentMethodID, :paidAmount, :paymentDate, :isFullyPaid, :expenseNotes, :userID, NOW(), NOW())";
-        $PDOStatement = $GLOBALS['pdo']->prepare($sqlCreate);
+        $PDOStatement = $GLOBALS['pdo'] -> prepare($sqlCreate);
 
         $success = $PDOStatement -> execute([
             ':expenseCategoryID' => $expense['expenseCategoryID'],

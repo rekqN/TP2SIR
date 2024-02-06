@@ -7,7 +7,7 @@ $user = user();
 
 $expenseCategoryFilter = isset($_POST['expenseCategoryFilter']) ? $_POST['expenseCategoryFilter'] : '';
 $paymentMethodsFilter = isset($_POST['paymentMethodsFilter']) ? $_POST['paymentMethodsFilter'] : '';
-$descriptionFilter = isset($_POST['descriptionFilter']) ? $_POST['descriptionFilter'] : '';
+$expenseDescriptionFilter = isset($_POST['expenseDescriptionFilter']) ? $_POST['expenseDescriptionFilter'] : '';
 $dateFilter = isset($_POST['dateFilter']) ? $_POST['dateFilter'] : '';
 $paidAmountFilter = isset($_POST['paidAmountFilter']) ? $_POST['paidAmountFilter'] : '';
 $orderDate = isset($_POST['orderDate']) ? $_POST['orderDate'] : '';
@@ -18,8 +18,8 @@ if (!empty($expenseCategoryFilter)) {
     $expenses = getExpensesByExpenseCategoryByUserID($user['userID'], $expenseCategoryFilter);
 } elseif (!empty($paymentMethodsFilter)) {
     $expenses = getExpensesByPaymentMethodByUserID($user['userID'], $paymentMethodsFilter);
-} elseif (!empty($descriptionFilter)) {
-    $expenses = getExpensesByExpenseDescription($user['userID'], $descriptionFilter);
+} elseif (!empty($expenseDescriptionFilter)) {
+    $expenses = getExpensesByExpenseDescription($user['userID'], $expenseDescriptionFilter);
 } elseif (!empty($dateFilter)) {
     $expenses = getExpensesByPaymentDate($user['userID'], $dateFilter);
 } elseif (!empty($paidAmountFilter)) {
@@ -32,14 +32,14 @@ if (!empty($expenseCategoryFilter)) {
 
 if ($orderDate == 'asc') {
     usort($expenses, function ($a, $b) {
-        $dateA = new DateTime($a['date']);
-        $dateB = new DateTime($b['date']);
+        $dateA = new DateTime($a['paymentDate']);
+        $dateB = new DateTime($b['paymentDate']);
         return $dateA <=> $dateB;
     });
 } elseif ($orderDate == 'desc') {
     usort($expenses, function ($a, $b) {
-        $dateA = new DateTime($a['date']);
-        $dateB = new DateTime($b['date']);
+        $dateA = new DateTime($a['paymentDate']);
+        $dateB = new DateTime($b['paymentDate']);
         return $dateB <=> $dateA;
     });
 }
@@ -52,7 +52,7 @@ if ($orderPaidAmount == 'asc') {
 ?>
 
 <?php include __DIR__ . '/sidebar.php'; ?>
-
+<link rel="icon" href="../../landingPage/assets/images/icon-1.png" type="image/x-icon">
 <link rel="stylesheet" href="../resources/styles/card.css">
 
 <div class="p-4 overflow-auto h-100">
@@ -61,7 +61,7 @@ if ($orderPaidAmount == 'asc') {
             <li class="breadcrumb-item"><i class="fa-solid fa-house"></i></li>
             <li class="breadcrumb-item">Dashboard</li>
             <li class="breadcrumb-item">Expenses</li>
-            <li class="breadcrumb-item">Own</li>
+            <li class="breadcrumb-item">My Expenses</li>
         </ol>
     </nav>
 
@@ -86,41 +86,34 @@ if ($orderPaidAmount == 'asc') {
 
     <div class="row mb-3">
         <div class="col-12 col-md-1 my-2 mb-2">
-            <button class="btn btn-blueviolet" data-bs-toggle="modal" data-bs-target="#add-expense">
+            <button class="btn btn-brown" data-bs-toggle="modal" data-bs-target="#add-expense">
                 <span class="fa fa-plus"></span>
             </button>
         </div>
-
-
         <div class="col-12 col-md-10 my-2 mb-2">
             <form id="searchForm" class="d-flex" method="post" action="">
                 <div class="form-group me-2 flex-grow-1">
-                    <input type="text" class="form-control" id="descriptionFilter" name="descriptionFilter"
-                        placeholder="Search by description" value="<?php echo $descriptionFilter; ?>">
+                    <input type="text" class="form-control" id="expenseDescriptionFilter" name="expenseDescriptionFilter" placeholder="Search by description" value="<?php echo $expenseDescriptionFilter; ?>">
                 </div>
             </form>
         </div>
         <div class="col-12 col-md-1 my-2 mb-2">
             <div class="dropdown">
-                <button class="btn btn btn-blueviolet-reverse dropdown-toggle" type="button" id="filterDropdownButton"
-                    data-bs-toggle="dropdown" aria-expanded="false">
-                    <i class="fas fa-list"></i>
-                </button>
+                <button class="btn btn btn-brown dropdown-toggle" type="button" id="filterDropdownButton" data-bs-toggle="dropdown" aria-expanded="false"><i class="fas fa-list"></i></button>
                 <ul class="dropdown-menu ps-1" aria-labelledby="filterDropdownButton">
                     <li class="mx-2">
                         <form method="post" action="">
                             <div class="form-group">
-                                Categories:
-                                <select class="form-select" id="expenseCategoryFilter" name="expenseCategoryFilter"
-                                    onchange="this.form.submit()">
+                                ExpenseCategories:
+                                <select class="form-select" id="expenseCategoryFilter" name="expenseCategoryFilter" onchange="this.form.submit()">
                                     <option value="">None</option>
                                     <?php
-                            $categories = getAllCategories();
-                            foreach ($categories as $category) {
-                                $selected = ($expenseCategoryFilter == $category['userID']) ? 'selected' : '';
-                                echo "<option value='{$category['userID']}' $selected>{$category['description']} (ID: {$category['userID']})</option>";
-                            }
-                            ?>
+                                        $expenseCategories = getAllExpenseCategories();
+                                        foreach ($expenseCategories as $expenseCategory) {
+                                            $selected = ($expenseCategoryFilter == $expenseCategory['expenseCategoryID']) ? 'selected' : '';
+                                            echo "<option value='{$expenseCategory['expenseCategoryID']}' $selected>{$expenseCategory['expenseCategory']}</option>";
+                                        }
+                                    ?>
                                 </select>
                             </div>
                         </form>
@@ -128,17 +121,15 @@ if ($orderPaidAmount == 'asc') {
                     <li class="mx-2">
                         <form method="post" action="">
                             <div class="form-group">
-                                Methods:
-                                <select class="form-select" id="paymentMethodsFilter" name="paymentMethodsFilter"
-                                    onchange="this.form.submit()">
-                                    <option value="">None</option>
+                                Payment Methods:
+                                <select class="form-select" id="paymentMethodsFilter" name="paymentMethodsFilter" onchange="this.form.submit()"> <option value="">None</option>
                                     <?php
-                            $methods = getAllMethods();
-                            foreach ($methods as $method) {
-                                $selected = ($paymentMethodsFilter == $method['userID']) ? 'selected' : '';
-                                echo "<option value='{$method['userID']}' $selected>{$method['description']} (ID: {$method['userID']})</option>";
-                            }
-                            ?>
+                                        $paymentMethods = getAllPaymentMethods();
+                                        foreach ($paymentMethods as $paymentMethod) {
+                                            $selected = ($paymentMethodsFilter == $paymentMethod['paymentMethodID']) ? 'selected' : '';
+                                            echo "<option value='{$paymentMethod['paymentMethodID']}' $selected>{$paymentMethod['paymentMethod']}</option>";
+                                        }
+                                    ?>
                                 </select>
                             </div>
                         </form>
@@ -146,18 +137,13 @@ if ($orderPaidAmount == 'asc') {
                     <li class="mx-2">
                         <form method="post" action="">
                             <div class="form-group">
-                                <input type="hidden" class="form-control" id="dateFilter" name="dateFilter"
-                                    value="<?php echo $dateFilter; ?>">
+                                <input type="hidden" class="form-control" id="dateFilter" name="dateFilter" value="<?php echo $dateFilter; ?>">
                             </div>
                             <div class="form-group">
-                                Date:
-                                <select class="form-select" id="orderDate" name="orderDate"
-                                    onchange="this.form.submit()">
-                                    <option value="asc" <?php echo ($orderDate == 'asc') ? 'selected' : ''; ?>>Most
-                                        Recent
-                                    </option>
-                                    <option value="desc" <?php echo ($orderDate == 'desc') ? 'selected' : ''; ?>>Oldest
-                                    </option>
+                                Payment Date:
+                                <select class="form-select" id="orderDate" name="orderDate" onchange="this.form.submit()">
+                                    <option value="asc" <?php echo ($orderDate == 'asc') ? 'selected' : ''; ?>>Most Recent</option>
+                                    <option value="desc" <?php echo ($orderDate == 'desc') ? 'selected' : ''; ?>>Oldest</option>
                                 </select>
                             </div>
                         </form>
@@ -165,17 +151,13 @@ if ($orderPaidAmount == 'asc') {
                     <li class="mx-2">
                         <form method="post" action="">
                             <div class="form-group">
-                                <input type="hidden" class="form-control" id="paidAmountFilter" name="paidAmountFilter"
-                                    value="<?php echo $paidAmountFilter; ?>">
+                                <input type="hidden" class="form-control" id="paidAmountFilter" name="paidAmountFilter" value="<?php echo $paidAmountFilter; ?>">
                             </div>
                             <div class="form-group">
-                                Amount:
-                                <select class="form-select" id="orderPaidAmount" name="orderPaidAmount"
-                                    onchange="this.form.submit()">
-                                    <option value="asc" <?php echo ($orderPaidAmount == 'asc') ? 'selected' : ''; ?>>ASC
-                                    </option>
-                                    <option value="desc" <?php echo ($orderPaidAmount == 'desc') ? 'selected' : ''; ?>>DESC
-                                    </option>
+                                Paid Amount:
+                                <select class="form-select" id="orderPaidAmount" name="orderPaidAmount" onchange="this.form.submit()">
+                                    <option value="asc" <?php echo ($orderPaidAmount == 'asc') ? 'selected' : ''; ?>>ASC</option>
+                                    <option value="desc" <?php echo ($orderPaidAmount == 'desc') ? 'selected' : ''; ?>>DESC</option>
                                 </select>
                             </div>
                         </form>
@@ -187,11 +169,8 @@ if ($orderPaidAmount == 'asc') {
                                 <select class="form-select" id="paymentStatusFilter" name="paymentStatusFilter"
                                     onchange="this.form.submit()">
                                     <option value="">All</option>
-                                    <option value="Paid"
-                                        <?php echo ($paymentStatusFilter == 'Paid') ? 'selected' : ''; ?>>Paid</option>
-                                    <option value="Unpaid"
-                                        <?php echo ($paymentStatusFilter == 'Unpaid') ? 'selected' : ''; ?>>Unpaid
-                                    </option>
+                                    <option value="Paid"<?php echo ($paymentStatusFilter == 'Paid') ? 'selected' : ''; ?>>Paid</option>
+                                    <option value="Unpaid"<?php echo ($paymentStatusFilter == 'Unpaid') ? 'selected' : ''; ?>>Unpaid</option>
                                 </select>
                             </div>
                         </form>
@@ -211,24 +190,17 @@ if ($orderPaidAmount == 'asc') {
         </div>
         <?php foreach ($expenses as $expense) : ?>
         <div class="col">
-            <div class="card style" id="expense-card-<?php echo $expense['expense_id']; ?>">
+            <div class="card style" id="expense-card-<?php echo $expense['expenseID']; ?>">
                 <div class="row">
                     <div class="col m-2">
-                        <h5 class="card-title"><?php echo $expense['description']; ?></h5>
+                        <h5 class="card-title"><?php echo $expense['expenseDescription']; ?></h5>
                     </div>
                     <div class="col">
                         <div class="justify-content-end align-items-center mt-2 mx-2">
-                            <button type="button" class='btn btn-danger btn-sm float-end m-1' data-bs-toggle="modal"
-                                data-bs-target="#delete-expense<?= $expense['expense_id']; ?>"><i
-                                    class="fas fa-trash-alt"></i></button>
-
-                            <?php if ($expense['payed'] != 1) { ?>
-                            <button type="button" class='btn btn-blueviolet btn-sm float-end m-1' data-bs-toggle="modal"
-                                data-bs-target="#share-expense<?= $expense['expense_id']; ?>"><i
-                                    class="fas fa-share"></i></button>
-                            <button type="button" class='btn btn-blueviolet btn-sm float-end m-1' data-bs-toggle="modal"
-                                data-bs-target="#edit-expense<?= $expense['expense_id']; ?>"><i
-                                    class="fas fa-pencil-alt"></i></button>
+                            <button type="button" class='btn btn-danger btn-sm float-end m-1' data-bs-toggle="modal" data-bs-target="#delete-expense<?= $expense['expenseID']; ?>"><i class="fas fa-trash-alt"></i></button>
+                            <?php if ($expense['isFullyPaid'] != 1) { ?>
+                                <button type="button" class='btn btn-brown btn-sm float-end m-1' data-bs-toggle="modal" data-bs-target="#share-expense<?= $expense['expenseID']; ?>"><i class="fas fa-share"></i></button>
+                                <button type="button" class='btn btn-brown btn-sm float-end m-1' data-bs-toggle="modal" data-bs-target="#edit-expense<?= $expense['expenseID']; ?>"><i class="fas fa-pencil-alt"></i></button>
                             <?php } ?>
                         </div>
                     </div>
@@ -236,38 +208,24 @@ if ($orderPaidAmount == 'asc') {
                 <div class="card-body">
                     <div class="row">
                         <div class="col justify-content-center">
-                            <p class="card-text"><strong>Category:</strong>
-                                <?php echo $expense['category_description']; ?></p>
-                            <?php if ($expense['payed'] == 1) : ?>
+                            <p class="card-text"><strong>Expense Category:</strong>
+                                <?php echo $expense['expense_category']; ?></p>
+                            <?php if ($expense['isFullyPaid'] == 1) : ?>
                             <p class="card-text"><strong>Payment Method:</strong>
-                                <?php echo $expense['payment_description']; ?></p>
+                                <?php echo $expense['payment_method']; ?></p>
                             <?php endif; ?>
-                            <p class="card-text"><strong>Amount:</strong> <?php echo $expense['amount']; ?></p>
-                            <p class="card-text"><strong>Payed:</strong>
-                                <?php echo ($expense['payed'] == 1) ? 'Yes' : 'No'; ?></p>
-                            <p class="card-text"><strong>Date:</strong> <?php echo $expense['date']; ?></p>
-                        </div>
-                        <div class="my-3" style="<?php echo empty($expense['receipt_img']) ? 'display: none;' : ''; ?>">
-                            <?php if (!empty($expense['receipt_img'])): ?>
-                            <?php
-                                            $receipt_Data = base64_decode($expense['receipt_img']);
-                                            $receipt_Src = 'data:image/jpeg;base64,' . base64_encode($receipt_Data);
-                                        ?>
-                            <div class="h-auto w-100">
-                                <img src="<?= $receipt_Src ?>" alt="receipt_img"
-                                    class="object-fit-cover w-100 img-fluid d-block ui-w-80 mx-auto rounded"
-                                    style="max-width: 150px;">
-                            </div>
-                            <?php endif; ?>
+                            <p class="card-text"><strong>Paid Amount:</strong> <?php echo $expense['paidAmount']; ?></p>
+                            <p class="card-text"><strong>Fully Paid:</strong>
+                                <?php echo ($expense['isFullyPaid'] == 1) ? 'Yes' : 'No'; ?></p>
+                            <p class="card-text"><strong>Date:</strong> <?php echo $expense['paymentDate']; ?></p>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- MODAL EDIT -->
-        <div class="modal fade" id="edit-expense<?= $expense['expense_id']; ?>" tabindex="-1"
-            aria-labelledby="edit-expense<?= $expense['expense_id']; ?>" aria-hidden="true">
+        <div class="modal fade" id="edit-expense<?= $expense['expenseID']; ?>" tabindex="-1"
+            aria-labelledby="edit-expense<?= $expense['expenseID']; ?>" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -275,98 +233,63 @@ if ($orderPaidAmount == 'asc') {
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body pt-0">
-                        <form action="../../controllers/expenses/expense.php" method="post"
+                        <form action="../../controllers/expense/expense.php" method="post"
                             enctype="multipart/form-data">
-                            <input type="hidden" name="expense_id" id="expense_id"
-                                value="<?php echo $expense['expense_id']; ?>">
-
-                            <!-- Description -->
+                            <input type="hidden" name="expenseID" id="expenseID"
+                                value="<?php echo $expense['expenseID']; ?>">
                             <div class="form-group mt-3">
-                                <label>Description</label>
-                                <input type="text" class="form-control" id="description" name="description"
-                                    placeholder="Expense Description"
-                                    value="<?= isset($expense['description']) ? $expense['description'] : '' ?>"
-                                    required>
+                                <label>Expense Description</label>
+                                <input type="text" class="form-control" id="expenseDescription" name="expenseDescription" placeholder="Expense Description" value="<?= isset($expense['description']) ? $expense['description'] : '' ?>" required>
                             </div>
-                            <!-- Category -->
                             <div class="form-group mt-3">
-                                <label>Category</label>
-                                <select class="form-control" id="category" name="category">
+                                <label>Expense Category</label>
+                                <select class="form-control" id="expenseCategory" name="expenseCategory">
                                     <?php
-                                            $categories = getAllCategories();
-                                            foreach ($categories as $category) {
-                                                $selected = isset($expense['category_id']) && $expense['category_id'] == $category['id'] ? 'selected' : '';
-                                                echo "<option value='{$category['id']}' $selected>{$category['description']}</option>";
-                                            }
-                                            ?>
+                                        $expenseCategories = getAllExpenseCategories();
+                                        foreach ($expenseCategories as $expenseCategory) {
+                                            $selected = isset($expense['expenseCategoryID']) && $expense['expenseCategoryID'] == $expenseCategory['expenseCategoryID'] ? 'selected' : '';
+                                            echo "<option value='{$expenseCategory['expenseCategoryID']}' $selected>{$expenseCategory['expenseCategory']}</option>";
+                                        }
+                                    ?>
                                 </select>
                             </div>
-                            <!-- Date -->
                             <div class="form-group mt-3">
-                                <label>Date</label>
-                                <input type="date" class="form-control" id="date" name="date"
-                                    value="<?= isset($expense['date']) ? $expense['date'] : '' ?>" required>
+                                <label>Payment Date</label>
+                                <input type="date" class="form-control" id="paymentDate" name="paymentDate" value="<?= isset($expense['paymentDate']) ? $expense['paymentDate'] : '' ?>" required>
                             </div>
-                            <!-- Amount -->
                             <div class="form-group mt-3">
-                                <label>Amount</label>
-                                <input type="text" class="form-control" id="amount" name="amount"
-                                    placeholder="Expense Amount"
-                                    value="<?= isset($expense['amount']) ? $expense['amount'] : '' ?>" required>
+                                <label>Paid Amount</label>
+                                <input type="text" class="form-control" id="paidAmount" name="paidAmount" placeholder="Paid Amount" value="<?= isset($expense['paidAmount']) ? $expense['paidAmount'] : '' ?>" required>
                             </div>
-                            <!-- Paid Checkbox -->
                             <div class="form-check mt-3">
-                                <input class="form-check-input" type="checkbox" name="payed" id="payed"
-                                    <?= isset($expense['payed']) && $expense['payed'] == 1 ? 'checked' : '' ?>>
-                                <label class="form-check-label">Paid?</label>
+                                <input class="form-check-input" type="checkbox" name="isFullyPaid" id="isFullyPaid" <?= isset($expense['isFullyPaid']) && $expense['isFullyPaid'] == 1 ? 'checked' : '' ?>>
+                                <label class="form-check-label">Fully paid for?</label>
                             </div>
-                            <!-- Payment Method -->
                             <div class="form-group mt-3" id="paymentBox">
                                 <label>Payment Method</label>
-                                <select class="form-control" id="method" name="method">
+                                <select class="form-control" id="paymentMethod" name="paymentMethod">
                                     <?php
-                                            $methods = getAllMethods();
-                                            foreach ($methods as $method) {
-                                                $selectedMethod = isset($expense['payment_id']) && $expense['payment_id'] == $method['id'] ? 'selected' : '';
-                                                echo "<option value='{$method['id']}' $selectedMethod>{$method['description']}</option>";
-                                            }
-                                            ?>
+                                        $paymentMethods = getAllPaymentMethods();
+                                        foreach ($paymentMethods as $paymentMethod) {
+                                            $selectedMethod = isset($expense['paymentMethodID']) && $expense['paymentMethodID'] == $paymentMethod['paymentMethodID'] ? 'selected' : '';
+                                            echo "<option value='{$paymentMethod['paymentMethodID']}' $selectedMethod>{$paymentMethod['paymentMethod']}</option>";
+                                        }
+                                    ?>
                                 </select>
                             </div>
-                            <!-- Note -->
                             <div class="form-group mt-3">
                                 <label>Note</label>
-                                <textarea class="form-control" id="note" name="note"
-                                    placeholder="Expense Note"><?= isset($expense['note']) ? $expense['note'] : '' ?></textarea>
+                                <textarea class="form-control" id="expenseNotes" name="expenseNotes" placeholder="Expense Note"><?= isset($expense['expenseNotes']) ? $expense['expenseNotes'] : '' ?></textarea>
                             </div>
-                            <!-- Receipt Image -->
-                            <div class="form-group mt-3">
-                                <label>Receipt Image</label>
-                                <?php if (!empty($expense['receipt_img'])): ?>
-                                <?php
-                                                $receiptData = base64_decode($expense['receipt_img']);
-                                                $receiptSrc = 'data:image/jpeg;base64,' . base64_encode($receiptData);
-                                            ?>
-                                <div class="h-auto w-100">
-                                    <img src="<?= $receiptSrc ?>" alt="receipt_img"
-                                        class="object-fit-cover w-100 img-fluid d-block ui-w-80 mx-auto rounded my-3"
-                                        style="max-width: 150px;">
-                                </div>
-                                <?php endif; ?>
-                                <input type="file" class="form-control" id="receipt_img" name="receipt_img">
-                            </div>
-                            <!-- Update Button -->
-                            <button type="submit" class="btn btn-blueviolet mt-3" name="user"
-                                value="edit">Update</button>
+                            <button type="submit" class="btn btn-brown mt-3" name="user" value="edit">Update</button>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- MODAL SHARE -->
-        <div class="modal fade" id="share-expense<?= $expense['expense_id']; ?>" tabindex="-1"
-            aria-labelledby="share-expense<?= $expense['expense_id']; ?>" aria-hidden="true">
+        <div class="modal fade" id="share-expense<?= $expense['expenseID']; ?>" tabindex="-1"
+            aria-labelledby="share-expense<?= $expense['expenseID']; ?>" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -374,11 +297,10 @@ if ($orderPaidAmount == 'asc') {
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form action="../../controllers/expenses/expense.php" method="post">
-                            <input type="hidden" name="expense_id" id="expense_id"
-                                value="<?php echo $expense['expense_id']; ?>">
+                        <form action="../../controllers/expense/expense.php" method="post">
+                            <input type="hidden" name="expenseID" id="expenseID" value="<?php echo $expense['expenseID']; ?>">
                             <div class="mb-3">
-                                <label for="email" class="form-label">Email of the User to Share With:</label>
+                                <label for="email" class="form-label">Email of the user you want to share the expense with:</label>
                                 <input type="email" class="form-control" id="email" name="email" required>
                             </div>
                             <button type="submit" name="user" value="share" class="btn btn-primary">Share</button>
@@ -388,9 +310,8 @@ if ($orderPaidAmount == 'asc') {
             </div>
         </div>
 
-        <!-- MODAL DELETE -->
-        <div class="modal fade" id="delete-expense<?= $expense['expense_id']; ?>" tabindex="-1"
-            aria-labelledby="delete-expense<?= $expense['expense_id']; ?>" aria-hidden="true">
+        <div class="modal fade" id="delete-expense<?= $expense['expenseID']; ?>" tabindex="-1"
+            aria-labelledby="delete-expense<?= $expense['expenseID']; ?>" aria-hidden="true">
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -398,11 +319,11 @@ if ($orderPaidAmount == 'asc') {
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form action="../../controllers/expenses/expense.php" method="post">
-                            <input type="hidden" name="expense_id" id="expense_id"
-                                value="<?php echo $expense['expense_id']; ?>">
+                        <form action="../../controllers/expense/expense.php" method="post">
+                            <input type="hidden" name="expenseID" id="expenseID"
+                                value="<?php echo $expense['expenseID']; ?>">
                             <div class="mb-3">
-                                Do you want to proceed deleting the expense?
+                                Do you want to DELETE this expense?
                             </div>
                             <button type="submit" name="user" value="delete" class="btn btn-danger">Delete</button>
                         </form>
@@ -414,74 +335,60 @@ if ($orderPaidAmount == 'asc') {
         <?php endforeach; ?>
     </div>
 
-    <!-- MODAL ADD -->
     <div class="modal fade" id="add-expense" tabindex="-1" aria-labelledby="modal-title" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="modal-title"> Add an expense </h5>
+                    <h5 class="modal-title" id="modal-title"> Add An Expense </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body pt-0">
-                    <form action="../../controllers/expenses/expense.php" method="post" enctype="multipart/form-data">
+                    <form action="../../controllers/expense/expense.php" method="post" enctype="multipart/form-data">
                         <div class="form-group mt-3">
-                            <label>Description</label>
-                            <input type="text" class="form-control" id="description" name="description"
-                                placeholder="Expense Description"
-                                value="<?= isset($_POST['description']) ? $_POST['description'] : '' ?>" required>
+                            <label>Expense Description</label>
+                            <input type="text" class="form-control" id="expenseDescription" name="expenseDescription" placeholder="Your Expense Description Here" value="<?= isset($_POST['expenseDescription']) ? $_POST['expenseDescription'] : '' ?>" required>
                         </div>
                         <div class="form-group mt-3">
-                            <label>Category</label>
-                            <select class="form-control" id="category" name="category">
+                            <label>Expense Category</label>
+                            <select class="form-control" id="expenseCategory" name="expenseCategory">
                                 <?php
-                                    $categories = getAllCategories();
-                                    foreach ($categories as $category) {
-                                        $selected = isset($_POST['category']) && $_POST['category'] == $category['id'] ? 'selected' : '';
-                                        echo "<option value='{$category['id']}' $selected>{$category['description']}</option>";
+                                    $expenseCategories = getAllExpenseCategories();
+                                    foreach ($expenseCategories as $expenseCategory) {
+                                        $selected = isset($_POST['expenseCategory']) && $_POST['expenseCategory'] == $expenseCategory['expenseCategoryID'] ? 'selected' : '';
+                                        echo "<option value='{$expenseCategory['expenseCategoryID']}' $selected>{$expenseCategory['expenseCategory']}</option>";
                                     }
                                 ?>
                             </select>
                         </div>
                         <div class="form-group mt-3">
                             <label>Date</label>
-                            <input type="date" class="form-control" id="date" name="date"
-                                value="<?= isset($_POST['date']) ? $_POST['date'] : '' ?>" required>
+                            <input type="date" class="form-control" id="paymentDate" name="paymentDate" value="<?= isset($_POST['paymentDate']) ? $_POST['paymentDate'] : '' ?>" required>
                         </div>
                         <div class="form-group mt-3">
-                            <label>Amount</label>
-                            <input type="text" class="form-control" id="amount" name="amount"
-                                placeholder="Expense Amount"
-                                value="<?= isset($_POST['amount']) ? $_POST['amount'] : '' ?>" required>
+                            <label>Expense Amount</label>
+                            <input type="text" class="form-control" id="paidAmount" name="paidAmount" placeholder="Expense Amount" value="<?= isset($_POST['paidAmount']) ? $_POST['paidAmount'] : '' ?>" required>
                         </div>
                         <div class="form-check mt-3">
-                            <input class="form-check-input" type="checkbox" name="payed" id="payed"
-                                <?= isset($_POST['payed']) && $_POST['payed'] == 'on' ? 'checked' : '' ?>>
-                            <label class="form-check-label">Paid?</label>
+                            <input class="form-check-input" type="checkbox" name="isFullyPaid" id="isFullyPaid" <?= isset($_POST['isFullyPaid']) && $_POST['isFullyPaid'] == 'on' ? 'checked' : '' ?>>
+                            <label class="form-check-label">Fully paid for?</label>
                         </div>
                         <div class="form-group mt-3" id="paymentBox">
                             <label>Payment Method</label>
-                            <select class="form-control" id="method" name="method">
+                            <select class="form-control" id="paymentMethod" name="paymentMethod">
                                 <?php
-                                    $methods = getAllMethods();
-                                    foreach ($methods as $method) {
-                                        $selectedMethod = isset($_POST['method']) && $_POST['method'] == $method['id'] ? 'selected' : '';
-                                        echo "<option value='{$method['id']}' $selectedMethod>{$method['description']}</option>";
+                                    $paymentMethods = getAllPaymentMethods();
+                                    foreach ($paymentMethods as $paymentMethod) {
+                                        $selectedMethod = isset($_POST['paymentMethod']) && $_POST['paymentMethod'] == $paymentMethod['paymentMethodID'] ? 'selected' : '';
+                                        echo "<option value='{$paymentMethod['paymentMethodID']}' $selectedMethod>{$paymentMethod['paymentMethod']}</option>";
                                     }
                                 ?>
                             </select>
                         </div>
-
                         <div class="form-group mt-3">
-                            <label>Receipt Image</label>
-                            <input type="file" class="form-control" id="receipt_img" name="receipt_img">
+                            <label>Expense Note</label>
+                            <textarea class="form-control" id="expenseNotes" name="expenseNotes" placeholder="Expense Notes"><?= isset($_POST['expenseNotes']) ? $_POST['expenseNotes'] : '' ?></textarea>
                         </div>
-
-                        <div class="form-group mt-3">
-                            <label>Note</label>
-                            <textarea class="form-control" id="note" name="note"
-                                placeholder="Expense Note"><?= isset($_POST['note']) ? $_POST['note'] : '' ?></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-blueviolet mt-3" name="user" value="add">Create</button>
+                        <button type="submit" class="btn btn-brown mt-3" name="user" value="add">Create Expense</button>
                     </form>
                 </div>
             </div>
@@ -491,18 +398,16 @@ if ($orderPaidAmount == 'asc') {
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        const payedCheckbox = document.getElementById('payed');
+        const isFullyPaidCheckbox = document.getElementById('isFullyPaid');
         const paymentBox = document.getElementById('paymentBox');
 
-        paymentBox.style.display = payedCheckbox.checked ? 'block' : 'none';
+        paymentBox.style.display = isFullyPaidCheckbox.checked ? 'block' : 'none';
 
-        payedCheckbox.addEventListener('change', function() {
+        isFullyPaidCheckbox.addEventListener('change', function() {
             paymentBox.style.display = this.checked ? 'block' : 'none';
         });
 
         var form = document.getElementById("searchForm");
-        var inputElement = document.getElementById("descriptionFilter");
-
-        setupDebouncer(inputElement, form);
+        var inputElement = document.getElementById("expenseDescriptionFilter");
     });
 </script>
