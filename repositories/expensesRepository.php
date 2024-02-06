@@ -1,8 +1,7 @@
 <?php
 require_once __DIR__ . '../../database/connection.php';
 
-/* EXPENSES COMBO BOX */
-function getAllCategories()
+function getAllExpenseCategories()
 {
     $stmt = $GLOBALS['pdo'] -> prepare('SELECT * FROM EXPENSECATEGORIES WHERE expenseCategory IS NOT NULL;');
     $stmt -> execute();
@@ -10,7 +9,7 @@ function getAllCategories()
     return $stmt -> fetchAll(PDO::FETCH_ASSOC);
 }
 
-function getAllMethods()
+function getAllPaymentMethods()
 {
     $stmt = $GLOBALS['pdo'] -> prepare('SELECT * FROM PAYMENTMETHODS WHERE paymentMethod IS NOT NULL;');
     $stmt -> execute();
@@ -59,15 +58,15 @@ function createExpense($expense)
     }
 }
 
-function getExpenseById($expenseID)
+function getExpenseByExpenseID($expenseID)
 {
     global $pdo;
     try {
-        $query = 'SELECT EXPENSES.*, EXPENSECATEGORIES.expenseCategory AS expense_category, PAYMENTMETHODS.paymentMethod AS payment_method ';
-        $query .= 'FROM EXPENSES ';
-        $query .= 'LEFT JOIN EXPENSECATEGORIES ON EXPENSES.expenseCategoryID = EXPENSECATEGORIES.expenseCategoryID ';
-        $query .= 'LEFT JOIN PAYMENTMETHODS ON EXPENSES.paymentMethodID = PAYMENTMETHODS.paymentMethodID ';
-        $query .= 'WHERE EXPENSES.expenseID = :expenseID';
+        $query = "SELECT EXPENSES.*, EXPENSECATEGORIES.expenseCategory AS expense_category, PAYMENTMETHODS.paymentMethod AS payment_method
+                FROM EXPENSES
+                LEFT JOIN EXPENSECATEGORIES ON EXPENSES.expenseCategoryID = EXPENSECATEGORIES.expenseCategoryID
+                LEFT JOIN PAYMENTMETHODS ON EXPENSES.paymentMethodID = PAYMENTMETHODS.paymentMethodID
+                WHERE EXPENSES.expenseID = :expenseID";
 
         $PDOStatement = $pdo -> prepare($query);
         $PDOStatement -> bindParam(':expenseID', $expenseID, PDO::PARAM_INT);
@@ -142,7 +141,7 @@ function deleteExpense($expenseID)
     }
 }
 
-function deleteExpensesByUserId($userID)
+function deleteExpensesByUserID($userID)
 {
     $sqlDeleteExpenses = "UPDATE EXPENSES SET deletedAt = NOW() WHERE userID = :userID";
     $deleteStatement = $GLOBALS['pdo'] -> prepare($sqlDeleteExpenses);

@@ -80,7 +80,7 @@ body {
                     <div class="collapse" id="expensesDropdownMenu">
                         <ul class="nav flex-column">
                             <li class="nav-item mb-2">
-                                <a href="./expense.php" class="mx-3">
+                                <a href="./expensePage.php" class="mx-3">
                                     My Expenses
                                 </a>
                             </li>

@@ -38,13 +38,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 if (!empty($errors)) {
     $_SESSION['errors'] = $errors;
-    header('Location: ../../pages/secure/profile.php');
+    header('Location: ../../pages/secure/profilePage.php');
     exit();
 }
 
 if ($successMessage) {
     $_SESSION['success'] = $successMessage;
-    header('Location: ../../pages/secure/profile.php');
+    header('Location: ../../pages/secure/profilePage.php');
     exit();
 }
 ?>
