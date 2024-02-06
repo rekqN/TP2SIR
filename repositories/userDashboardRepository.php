@@ -76,36 +76,4 @@ function getSharedExpensesAmountByUserID($userID) {
         return 0;
     }
 }
-
-
-function countFutureExpensesByUserID($userID)
-{
-    global $pdo;
-
-    $stmt = $pdo -> prepare("SELECT COUNT(*) AS countFutureExpenses FROM EXPENSES WHERE userID = :userID AND paymentDate > NOW() AND isFullyPaid = 0 AND deletedAt IS NULL");
-    $stmt -> bindParam(':userID', $userID, PDO::PARAM_INT);
-    $stmt -> execute();
-
-    $result = $stmt -> fetch(PDO::FETCH_ASSOC);
-
-    return $result['countFutureExpenses'];
-}
-
-function getFutureExpensesDetailsByUserID($userID)
-{
-    global $pdo;
-
-    $query = "SELECT E.*, EC.expenseCategory AS expense_category
-              FROM EXPENSES E
-              JOIN EXPENSECATEGORIES EC ON E.expenseCategoryID = EC.expenseCategoryID
-              WHERE E.userID = :userID AND E.paymentDate > NOW() AND E.deletedAt IS NULL AND E.isFullyPaid = 0";
-
-    $stmt = $pdo -> prepare($query);
-    $stmt -> bindParam(':userID', $userID, PDO::PARAM_INT);
-    $stmt -> execute();
-
-    $result = $stmt -> fetchAll(PDO::FETCH_ASSOC);
-
-    return $result;
-}
 ?>

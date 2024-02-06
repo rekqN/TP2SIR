@@ -46,6 +46,7 @@ body {
 }
 
 .mynav li a i {
+    color: var(--very-light-brown);
     width: 25px;
     text-align: center;
 }
@@ -105,20 +106,19 @@ body {
                     </a>
                 </li>
                 <li class="nav-item py-1 mask <?= $user['isAdmin'] ? '' : 'd-none'; ?>">
-                    <a href="#" class="nav-link text-white btn-side" data-bs-toggle="collapse"
-                        data-bs-target="#adminDropdownMenu" aria-expanded="false">
+                    <a href="#" class="nav-link text-white btn-side" data-bs-toggle="collapse" data-bs-target="#adminDropdownMenu" aria-expanded="false">
                         <i class="fa-solid fa-users" title="Admin"></i>
                         Admin
                     </a>
                     <div class="collapse" id="adminDropdownMenu">
                         <ul class="nav flex-column">
                             <li class="nav-item mb-2">
-                                <a href="./admin-stats.php" class="mx-3">
+                                <a href="./adminDashboard.php" class="mx-3">
                                     Dashboard
                                 </a>
                             </li>
                             <li class="nav-item mb-2">
-                                <a href="./admin-users.php" class="mx-3">
+                                <a href="./userManagementPage.php" class="mx-3">
                                     Manage Users
                                 </a>
                             </li>
@@ -131,9 +131,9 @@ body {
                 <div class="d-flex">
                     <?php if (!empty($user['avatar'])): ?>
                     <?php
-                            $avatarData = base64_decode($user['avatar']);
-                            $avatarSource = 'data:image/jpeg;base64,' . base64_encode($avatarData);
-                        ?>
+                        $avatarData = base64_decode($user['avatar']);
+                        $avatarSource = 'data:image/jpeg;base64,' . base64_encode($avatarData);
+                    ?>
                     <img src="<?= $avatarSource ?>" alt="avatar" class="img-fluid rounded-circle me-2" width="50px">
                     <?php else: ?>
                     <i class="fas fa-user-circle fa-3x me-2 text-secondary"></i>
