@@ -1,9 +1,10 @@
 <?php
 
-require_once __DIR__ . '/../../infra/repositories/userRepository.php';
-require_once __DIR__ . '/../../helpers/validations/admin/validate-user.php';
-require_once __DIR__ . '/../../helpers/validations/admin/validate-password.php';
-require_once __DIR__ . '/../../helpers/session.php';
+require_once __DIR__ . '/../../repositories/adminRepository.php';
+require_once __DIR__ . '/../../repositories/userRepository.php';
+require_once __DIR__ . '/../../validations/admin/validate-user.php';
+require_once __DIR__ . '/../../validations/admin/validate-update.php';
+require_once __DIR__ . '/../../validations/session.php';
 
 if (isset($_POST['user'])) {
     if ($_POST['user'] == 'create') {
@@ -11,128 +12,101 @@ if (isset($_POST['user'])) {
     }
 
     if ($_POST['user'] == 'update') {
-        update($_POST);
+        $userToEdit = $_POST['userID'];
+        update($userToEdit, $_POST);
     }
 
-    if ($_POST['user'] == 'profile') {
-        updateProfile($_POST);
-    }
-
-    if ($_POST['user'] == 'password') {
-        changePassword($_POST);
+    if ($_POST['user'] == 'delete') {
+        $userToDelete = $_POST['userID'];
+        softdelete($userToDelete);
     }
 }
 
-if (isset($_GET['user'])) {
-    if ($_GET['user'] == 'update') {
-        $user = getById($_GET['id']);
-        $user['action'] = 'update';
-        $params = '?' . http_build_query($user);
-        header('location: /crud/pages/secure/admin/user.php' . $params);
-    }
-
-    if ($_GET['user'] == 'delete') {
-        $user = getById($_GET['id']);
-        if ($user['administrator']) {
-            $_SESSION['errors'] = ['This user cannot be deleted!'];
-            header('location: /crud/pages/secure/admin/');
-            return false;
-        }
-
-        $success = delete_user($user);
-
-        if ($success) {
-            $_SESSION['success'] = 'User deleted successfully!';
-            header('location: /crud/pages/secure/admin/');
-        }
-    }
-}
-
-function create($req)
+function create($postData)
 {
-    $data = validatedUser($req);
+    $resultValidation = validatedUser($postData);
 
-    if (isset($data['invalid'])) {
-        $_SESSION['errors'] = $data['invalid'];
-        $params = '?' . http_build_query($req);
-        header('location: /crud/pages/secure/admin/user.php' . $params);
-        return false;
+    if (isset($resultValidation['invalid'])) {
+        $_SESSION['errors'] = $resultValidation['invalid'];
+        header('location: /projeto_sir/pages/secure/userManagementPage.php');
+        exit;
     }
 
-    $success = createUser($data);
+    $user = [
+        'firstName' => $resultValidation['firstName'],
+        'lastName' => $resultValidation['lastName'],
+        'dateOfBirth' => $resultValidation['dateOfBirth'],
+        'password' => $resultValidation['password'],
+        'emailAddress' => $resultValidation['emailAddress'],
+        'isAdmin' => isset($resultValidation['isAdmin']) && $resultValidation['isAdmin'] ? 1 : 0,
+    ];
 
-    if ($success) {
-        $_SESSION['success'] = 'User created successfully!';
-        header('location: /crud/pages/secure/admin/');
+    $result = createUser($user);
+
+    if ($result) {
+        $_SESSION['success'] = '!! User created SUCCESSFULLY !!';
+    } else {
+        error_log("!! Error creating user: " . implode(" - ", $GLOBALS['pdo']->errorInfo()));
     }
+
+    header('location: /projeto_sir/pages/secure/userManagementPage.php');
+    exit;
 }
 
-function update($req)
+function update($userID, $postData)
 {
-    $data = validatedUser($req);
+    if (!isset($_SESSION['userID'])) {
+        $_SESSION['errors'][] = 'User ID not set in the session.';
+        $params = '?' . http_build_query($postData);
+        header('location: /projeto_sir/pages/secure/userManagementPage.php' . $params);
+        return;
+    }
 
-    if (isset($data['invalid'])) {
-        $_SESSION['errors'] = $data['invalid'];
+    $userData = validatedUpdate($postData);
+
+    if (isset($userData['invalid'])) {
+        $_SESSION['errors'] = $userData['invalid'];
         $_SESSION['action'] = 'update';
-        $params = '?' . http_build_query($req);
-        header('location: /crud/pages/secure/admin/user.php' . $params);
-
-        return false;
+        $params = '?' . http_build_query($postData);
+        header('location: /projeto_sir/pages/secure/userManagementPage.php' . $params);
+        return;
     }
 
-    $success = updateUser($data);
+    $userID = $postData['userID'];
+
+    $success = updateAdminUser($userID, $userData);
+    var_dump($success);
 
     if ($success) {
-        $_SESSION['success'] = 'User successfully changed!';
+        $_SESSION['success'] = '!! User SUCCESSFULLY updated !!';
         $data['action'] = 'update';
         $params = '?' . http_build_query($data);
-        header('location: /crud/pages/secure/admin/user.php' . $params);
-    }
-}
-
-function updateProfile($req)
-{
-    $data = validatedUser($req);
-
-    if (isset($data['invalid'])) {
-        $_SESSION['errors'] = $data['invalid'];
-        $params = '?' . http_build_query($req);
-        header('location: /crud/pages/secure/user/profile.php' . $params);
-        } else {
-        $user = user(); 
-        $data['id'] = $user['id'];
-        $data['administrator'] = $user['administrator'];
-
-        $success = updateUser($data);
-
-        if ($success) {
-            $_SESSION['success'] = 'User successfully changed!';
-            $_SESSION['action'] = 'update';
-            $params = '?' . http_build_query($data);
-            header('location: /crud/pages/secure/user/profile.php' . $params);
-        }
-    }
-}
-
-function changePassword($req)
-{
-    $data = passwordIsValid($req);
-    if (isset($data['invalid'])) {
-        $_SESSION['errors'] = $data['invalid'];
-        $params = '?' . http_build_query($req);
-        header('location: /crud/pages/secure/user/password.php' . $params);
+        header('location: /projeto_sir/pages/secure/userManagementPage.php');
     } else {
-        $data['id'] = userId();
-        $success = updatePassword($data);
-        if ($success) {
-            $_SESSION['success'] = 'Password successfully changed!';
-            header('location: /crud/pages/secure//user/password.php');
-        }
+        $_SESSION['errors'][] = '!! Failed to UPDATE user !!';
+        header('location: /projeto_sir/pages/secure/userManagementPage.php');
     }
 }
 
-function delete_user($user)
+function softdelete($userID)
 {
-    $data = deleteUser($user['id']);
-    return $data;
+    $deleteSuccess = softDeleteUser($userID);
+
+    if ($deleteSuccess) {
+        if ($_SESSION['userID'] == $userID) {
+            session_unset();
+            session_destroy();
+    
+            setcookie(session_name(), '', time() - 3600);
+            setcookie('userID', '', time() - 3600, "/");
+            setcookie('firstName', '', time() - 3600, "/");
+        }
+
+        $_SESSION['success'] = 'User deleted successfully.';
+        $home_url = 'http://' . $_SERVER['HTTP_HOST'] . '/projeto_sir/pages/secure/userManagementPage.php';
+        header('Location: ' . $home_url);
+        exit();
+    } else {
+        $_SESSION['errors'][] = 'Error deleting user.';
+    }
 }

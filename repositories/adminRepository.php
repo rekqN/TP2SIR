@@ -5,13 +5,13 @@ function createUser($userID)
 {
     $userID['password'] = password_hash($userID['password'], PASSWORD_DEFAULT);
 
-    $sqlCreate = "INSERT INTO USERS (firstName, lastName, dataOfBirth, password, emailAddress, isAdmin, createdAt,  updatedAt) VALUES ( :firstName, :lastName, :dataOfBirth, :password, :emailAddress, :isAdmin, NOW(), NOW())";
+    $sqlCreate = "INSERT INTO USERS (firstName, lastName, dateOfBirth, password, emailAddress, isAdmin, createdAt,  updatedAt) VALUES ( :firstName, :lastName, :dateOfBirth, :password, :emailAddress, :isAdmin, NOW(), NOW())";
     $PDOStatement = $GLOBALS['pdo'] -> prepare($sqlCreate);
 
     $success = $PDOStatement -> execute([
         ':firstName' => $userID['firstName'],
         ':lastName' => $userID['lastName'],
-        ':dataOfBirth' => $userID['dataOfBirth'],
+        ':dateOfBirth' => $userID['dateOfBirth'],
         ':password' => $userID['password'],
         ':emailAddress' => $userID['emailAddress'],
         ':isAdmin' => $userID['isAdmin'],
@@ -27,7 +27,7 @@ function createUser($userID)
 function updateAdminUser($userID, $userData)
 {
     try {
-        $sqlUpdate = "UPDATE users SET firstName = :firstName, lastName = :lastName, country = :country,  dataOfBirth = :dataOfBirth, isAdmin = :isAdmin, updatedAt = CURRENT_TIMESTAMP";
+        $sqlUpdate = "UPDATE users SET firstName = :firstName, lastName = :lastName, country = :country,  dateOfBirth = :dateOfBirth, isAdmin = :isAdmin, updatedAt = CURRENT_TIMESTAMP";
 
         if (!empty($userData['password'])) {
             $sqlUpdate .= ', password = :password';
@@ -38,15 +38,15 @@ function updateAdminUser($userID, $userData)
 
         $PDOStatement = $GLOBALS['pdo'] -> prepare($sqlUpdate);
 
-        if (empty($userData['dataOfBirth'])) {
-            $userData['dataOfBirth'] = null;
+        if (empty($userData['dateOfBirth'])) {
+            $userData['dateOfBirth'] = null;
         }
 
         $params = [
             ':firstName' => $userData['firstName'],
             ':lastName' => $userData['lastName'],
             ':country' => $userData['country'],
-            ':dataOfBirth' => $userData['dataOfBirth'],
+            ':dateOfBirth' => $userData['dateOfBirth'],
             ':isAdmin' => $userData['isAdmin'],
             ':userID' => $userID,
         ];

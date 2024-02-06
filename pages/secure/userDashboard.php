@@ -10,7 +10,7 @@
     $sharedExpensesCountToMe = countSharedExpensesBySentoToUserID($userID['userID']);
     $sumExpensesAmount = getExpensesAmountByUserID($userID['userID']);
     $sumSharedExpensesAmount = getSharedExpensesAmountByUserID($userID['userID']);
-
+?>
 <?php include __DIR__ . '/sidebar.php'; ?>
 
 <style>
