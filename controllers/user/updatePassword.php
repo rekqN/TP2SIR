@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'confirmNewPassword' => $_POST['confirmNewPassword'],
     ];
 
-    $validationResult = validatePasswordUpdate($user['userID'], $user['currentPassword'], $user['newPassword'], $user['confirmNewPassword']);
+    $validationResult = updatePasswordValidation($user['userID'], $user['currentPassword'], $user['newPassword'], $user['confirmNewPassword']);
 
     if ($validationResult !== true) {
         $errors[] = ' !! ERROR VALIDATING: ' . $validationResult . ' !!';

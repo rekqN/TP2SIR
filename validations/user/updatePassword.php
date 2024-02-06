@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../../repositories/userRepository.php';
 
-function validatePasswordUpdate($userID, $currentPassword, $newPassword, $confirmPassword)
+function updatePasswordValidation($userID, $currentPassword, $newPassword, $confirmPassword)
 {
     $hashedUserPassword = getPasswordHash($userID);
 
