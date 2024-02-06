@@ -92,7 +92,7 @@ function updateExpense($expenseID, $expenseData)
             ':paymentDate' => $expenseData['paymentDate'],
             ':isFullyPaid' => $expenseData['isFullyPaid'],
             ':expenseNotes' => $expenseData['expenseNotes'],
-            ':useriD' => $expenseData['userID'],
+            ':userID' => $expenseData['userID'],
             ':expenseID' => $expenseID,
         ];
 

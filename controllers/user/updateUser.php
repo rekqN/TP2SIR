@@ -9,7 +9,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($data['invalid'])) {
         $_SESSION['errors'] = $data['invalid'];
         
-        header('Location: ../../pages/secure/profile.php');
+        header('Location: ../../pages/secure/profilePage.php');
         exit();
     }
 
@@ -27,12 +27,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($updateSuccess) {
         $_SESSION['success'] = '!! Updated profile SUCCESSFULLY !!';
         
-        header('Location: ../../pages/secure/profile.php');
+        header('Location: ../../pages/secure/profilePage.php');
         exit();
     } else {
         $_SESSION['errors'] = ['update' => '!! FAILED to update profile !!'];
         
-        header('Location: ../../pages/secure/profile.php');
+        header('Location: ../../pages/secure/profilePage.php');
         exit();
     }
 } else {

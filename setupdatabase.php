@@ -41,13 +41,13 @@ if(!$doTablesExist) {
 
         CREATE TABLE PAYMENTMETHODS (
             paymentMethodID int(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-            paymentMethod varchar(255) NOT NULL,
+            paymentMethod varchar(255) NOT NULL DEFAULT "Cash",
             PRIMARY KEY (paymentMethodID)
         );
 
         CREATE TABLE EXPENSECATEGORIES (
             expenseCategoryID int(20) UNSIGNED NOT NULL AUTO_INCREMENT,
-            expenseCategory varchar(255) NOT NULL,
+            expenseCategory varchar(255) NOT NULL DEFAULT "General",
             PRIMARY KEY (expenseCategoryID)
         );
 

@@ -26,9 +26,9 @@ function isExpenseShared($expenseID, $fromUserID, $sentToUserID)
         $sql = 'SELECT COUNT(*) FROM SHAREDEXPENSES WHERE expenseID = :expenseID AND fromUserID = :fromUserID AND sentToUserID = :sentToUserID AND deletedAt IS NULL';
 
         $PDOStatement = $GLOBALS['pdo'] -> prepare($sql);
-        $PDOStatement -> bindParam(':expenseID', $expenseId, PDO::PARAM_INT);
-        $PDOStatement -> bindParam(':fromUserID', $sharerUserId, PDO::PARAM_INT);
-        $PDOStatement -> bindParam(':sentToUserID', $receiverUserId, PDO::PARAM_INT);
+        $PDOStatement -> bindParam(':expenseID', $expenseID, PDO::PARAM_INT);
+        $PDOStatement -> bindParam(':fromUserID', $fromUserID, PDO::PARAM_INT);
+        $PDOStatement -> bindParam(':sentToUserID', $sentToUserID, PDO::PARAM_INT);
         $PDOStatement -> execute();
 
         return $PDOStatement -> fetchColumn() > 0;
@@ -41,17 +41,17 @@ function isExpenseShared($expenseID, $fromUserID, $sentToUserID)
 function getSharedExpensesByUserID($userID)
 {
     try {
-        $query = "SELECT EXPENSES.*, EXPENSECATEGORIES.expenseCategory AS expense_category, PAYMENTMETHODS.paymentMethods AS payment_methods,
-                SHAREDEXPENSES.sentToUserID, USERS.firstName AS from_first_name, USRES.lastName AS from_last_name
+        $query = "SELECT EXPENSES.*, EXPENSECATEGORIES.expenseCategory AS expense_category, PAYMENTMETHODS.paymentMethod AS payment_methods,
+                SHAREDEXPENSES.sentToUserID, USERS.firstName AS from_first_name, USERS.lastName AS from_last_name
                 FROM EXPENSES
                 INNER JOIN SHAREDEXPENSES ON EXPENSES.expenseID = SHAREDEXPENSES.expenseID
                 LEFT JOIN EXPENSECATEGORIES ON EXPENSES.expenseCategoryID = EXPENSECATEGORIES.expenseCategoryID
-                LEFT JOIN methods ON EXPENSES.paymentMethodID = PAYMENTMETHODS.paymentMethodID
-                LEFT JOIN users ON SHAREDEXPENSES.fromUserID = USERS.userID
-                WHERE SHAREDEXPENSES.sentToUserID = :userId AND EXPENSES.deletedAt IS NULL AND SHAREDEXPENSES.deletedAt IS NULL";
+                LEFT JOIN PAYMENTMETHODS ON EXPENSES.paymentMethodID = PAYMENTMETHODS.paymentMethodID
+                LEFT JOIN USERS ON SHAREDEXPENSES.fromUserID = USERS.userID
+                WHERE SHAREDEXPENSES.sentToUserID = :userID AND EXPENSES.deletedAt IS NULL AND SHAREDEXPENSES.deletedAt IS NULL";
 
         $PDOStatement = $GLOBALS['pdo'] -> prepare($query);
-        $PDOStatement -> bindParam(':userId', $userId, PDO::PARAM_INT);
+        $PDOStatement -> bindParam(':userID', $userID, PDO::PARAM_INT);
         $PDOStatement -> execute();
 
         return $PDOStatement -> fetchAll(PDO::FETCH_ASSOC);
@@ -71,9 +71,9 @@ function getSharedExpensesBySenderName($senderName)
                 JOIN EXPENSES ON SE.expenseID = EXPENSES.expenseID
                 LEFT JOIN EXPENSECATEGORIES ON EXPENSES.expenseCategoryID = EXPENSECATEGORIES.expenseCategoryID
                 LEFT JOIN PAYMENTMETHODS ON EXPENSES.paymentMethodID = PAYMENTMETHODS.paymentMethodID
-                WHERE U.firstName LIKE :senderName OR U.lastName LIKE :senderName";
+                WHERE U.firstName LIKE :senderName OR U.lastName LIKE :senderName  AND EXPENSES.deletedAt IS NULL AND SHAREDEXPENSES.deletedAt IS NULL";
 
-        $PDOStatement = $GLOBALS['pdo']->prepare($query);
+        $PDOStatement = $GLOBALS['pdo'] -> prepare($query);
         $nameParam = "%$senderName%";
         $PDOStatement -> bindParam(':senderName', $nameParam, PDO::PARAM_STR);
         $PDOStatement -> execute();
@@ -92,8 +92,8 @@ function deleteSharedExpense($expenseID, $userID)
     try {
         $stmt = $GLOBALS['pdo'] -> prepare('UPDATE SHAREDEXPENSES SET deletedAt = NOW() WHERE expenseID = :expenseID AND sentToUserID = :sentToUserID AND deletedAt IS NULL');
 
-        $stmt -> bindParam(':expenseID', $expenseId, PDO::PARAM_INT);
-        $stmt -> bindParam(':sentToUserID', $UserId, PDO::PARAM_INT);
+        $stmt -> bindParam(':expenseID', $expenseID, PDO::PARAM_INT);
+        $stmt -> bindParam(':sentToUserID', $UserID, PDO::PARAM_INT);
 
         return $stmt -> execute();
     } catch (PDOException $e) {
@@ -104,8 +104,8 @@ function deleteSharedExpense($expenseID, $userID)
 
 function deleteSharedExpensesByUserID($userID)
 {
-    $sqlDeleteExpenses = "UPDATE SHAREDEXPENSES SET deletedAt = NOW() WHERE sentToUserID = :userId OR fromUserID = :userId";
-    $deleteStatement = $GLOBALS['pdo'] -> prepare($sqlDeleteExpenses);
-    $deleteStatement -> execute([':userId' => $userId]);
+    $sqlDeleteSahredExpenses = "UPDATE SHAREDEXPENSES SET deletedAt = NOW() WHERE sentToUserID = :userID OR fromUserID = :userID";
+    $deleteStatement = $GLOBALS['pdo'] -> prepare($sqlDeleteSahredExpenses);
+    $deleteStatement -> execute([':userID' => $userID]);
 }
 ?>

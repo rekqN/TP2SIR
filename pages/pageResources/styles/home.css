@@ -1,9 +1,7 @@
-/* BODY CSS */
 body {
     font-family: sans-serif;
   }
   
-  /* HEADER CSS */
   header {
     z-index: 999;
   }
@@ -37,7 +35,6 @@ body {
     background-color: white;
   }
   
-  /* MAIN CSS */
   .section:nth-child(2n) {
     background-color: rgb(231, 231, 231);
   }
@@ -46,7 +43,6 @@ body {
     text-align: justify;
   }
   
-  /* SECTION_BTN A */
   .section__btn a {
     border: 2px solid blueviolet;
   }
@@ -58,7 +54,6 @@ body {
     transition-duration: 1s;
   }
   
-  /* CARD__CONTENT */
   .card__content {
     box-shadow: 0 10px 10px rgba(0, 0, 0, 0.1);
     transition: background-color 0.3s ease-in-out, transform 0.2s ease-in-out,
@@ -71,7 +66,6 @@ body {
     transition-duration: 1s;
   }
   
-  /* FOOTER */
   .social a i {
     font-size: 2em;
   }
@@ -86,7 +80,6 @@ body {
     transition-duration: 1s;
   }
   
-  /* CLASSES CSS */
   .max-width-1250px {
     max-width: 1250px;
   }
@@ -97,7 +90,6 @@ body {
     transition-duration: 2s;
   }
   
-  /* RESPONSIVE MENU */
   .sidebar {
     top: 5.7rem;
     left: -50%;

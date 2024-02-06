@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_avatar'])) {
         $success = avatarUpdate($user['userID'], $encodedAvatar);
 
         if ($success) {
-            header('Location: ../../pages/secure/profile.php');
+            header('Location: ../../pages/secure/profilePage.php');
             exit();
         } else {
             $errors[] = '!! FAILED to update profile !!';
@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['update_avatar'])) {
 
 if (!empty($errors)) {
     $_SESSION['errors'] = $errors;
-    header('Location: ../../pages/secure/profile.php');
+    header('Location: ../../pages/secure/profilePage.php');
     exit();
 }
 ?>

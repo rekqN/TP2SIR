@@ -59,7 +59,7 @@ if ($orderPaidAmount == 'asc') {
     <nav style="--bs-breadcrumb-divider:'>';font-size:14px">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><i class="fa-solid fa-house"></i></li>
-            <li class="breadcrumb-item">Dashboard</li>
+            <li class="breadcrumb-item">User Dashboard</li>
             <li class="breadcrumb-item">Expenses</li>
             <li class="breadcrumb-item">My Expenses</li>
         </ol>
@@ -106,7 +106,7 @@ if ($orderPaidAmount == 'asc') {
                             <div class="form-group">
                                 ExpenseCategories:
                                 <select class="form-select" id="expenseCategoryFilter" name="expenseCategoryFilter" onchange="this.form.submit()">
-                                    <option value="">None</option>
+                                    <option value="">No Filter</option>
                                     <?php
                                         $expenseCategories = getAllExpenseCategories();
                                         foreach ($expenseCategories as $expenseCategory) {
@@ -122,12 +122,12 @@ if ($orderPaidAmount == 'asc') {
                         <form method="post" action="">
                             <div class="form-group">
                                 Payment Methods:
-                                <select class="form-select" id="paymentMethodsFilter" name="paymentMethodsFilter" onchange="this.form.submit()"> <option value="">None</option>
+                                <select class="form-select" id="paymentMethodsFilter" name="paymentMethodsFilter" onchange="this.form.submit()"> <option value="">No Filter</option>
                                     <?php
                                         $paymentMethods = getAllPaymentMethods();
                                         foreach ($paymentMethods as $paymentMethod) {
-                                            $selected = ($paymentMethodsFilter == $paymentMethod['paymentMethodID']) ? 'selected' : '';
-                                            echo "<option value='{$paymentMethod['paymentMethodID']}' $selected>{$paymentMethod['paymentMethod']}</option>";
+                                            $selectedPaymentMethod = ($paymentMethodsFilter == $paymentMethod['paymentMethodID']) ? 'selected' : '';
+                                            echo "<option value='{$paymentMethod['paymentMethodID']}' $selectedPaymentMethod>{$paymentMethod['paymentMethod']}</option>";
                                         }
                                     ?>
                                 </select>
@@ -198,10 +198,8 @@ if ($orderPaidAmount == 'asc') {
                     <div class="col">
                         <div class="justify-content-end align-items-center mt-2 mx-2">
                             <button type="button" class='btn btn-danger btn-sm float-end m-1' data-bs-toggle="modal" data-bs-target="#delete-expense<?= $expense['expenseID']; ?>"><i class="fas fa-trash-alt"></i></button>
-                            <?php if ($expense['isFullyPaid'] != 1) { ?>
-                                <button type="button" class='btn btn-brown btn-sm float-end m-1' data-bs-toggle="modal" data-bs-target="#share-expense<?= $expense['expenseID']; ?>"><i class="fas fa-share"></i></button>
-                                <button type="button" class='btn btn-brown btn-sm float-end m-1' data-bs-toggle="modal" data-bs-target="#edit-expense<?= $expense['expenseID']; ?>"><i class="fas fa-pencil-alt"></i></button>
-                            <?php } ?>
+                            <button type="button" class='btn btn-primary btn-sm float-end m-1' data-bs-toggle="modal" data-bs-target="#share-expense<?= $expense['expenseID']; ?>"><i class="fas fa-share"></i></button>
+                            <button type="button" class='btn btn-secondary btn-sm float-end m-1' data-bs-toggle="modal" data-bs-target="#edit-expense<?= $expense['expenseID']; ?>"><i class="fas fa-pencil-alt"></i></button>
                         </div>
                     </div>
                 </div>
@@ -233,13 +231,11 @@ if ($orderPaidAmount == 'asc') {
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body pt-0">
-                        <form action="../../controllers/expense/expense.php" method="post"
-                            enctype="multipart/form-data">
-                            <input type="hidden" name="expenseID" id="expenseID"
-                                value="<?php echo $expense['expenseID']; ?>">
+                        <form action="../../controllers/expense/expense.php" method="post" enctype="multipart/form-data">
+                            <input type="hidden" name="expenseID" id="expenseID" value="<?php echo $expense['expenseID']; ?>">
                             <div class="form-group mt-3">
                                 <label>Expense Description</label>
-                                <input type="text" class="form-control" id="expenseDescription" name="expenseDescription" placeholder="Expense Description" value="<?= isset($expense['description']) ? $expense['description'] : '' ?>" required>
+                                <input type="text" class="form-control" id="expenseDescription" name="expenseDescription" placeholder="Expense Description" value="<?= isset($expense['expenseDescription']) ? $expense['expenseDescription'] : '' ?>" required>
                             </div>
                             <div class="form-group mt-3">
                                 <label>Expense Category</label>
@@ -271,8 +267,8 @@ if ($orderPaidAmount == 'asc') {
                                     <?php
                                         $paymentMethods = getAllPaymentMethods();
                                         foreach ($paymentMethods as $paymentMethod) {
-                                            $selectedMethod = isset($expense['paymentMethodID']) && $expense['paymentMethodID'] == $paymentMethod['paymentMethodID'] ? 'selected' : '';
-                                            echo "<option value='{$paymentMethod['paymentMethodID']}' $selectedMethod>{$paymentMethod['paymentMethod']}</option>";
+                                            $selectedPaymentMethod = isset($expense['paymentMethodID']) && $expense['paymentMethodID'] == $paymentMethod['paymentMethodID'] ? 'selected' : '';
+                                            echo "<option value='{$paymentMethod['paymentMethodID']}' $selectedPaymentMethod>{$paymentMethod['paymentMethod']}</option>";
                                         }
                                     ?>
                                 </select>
@@ -301,7 +297,7 @@ if ($orderPaidAmount == 'asc') {
                             <input type="hidden" name="expenseID" id="expenseID" value="<?php echo $expense['expenseID']; ?>">
                             <div class="mb-3">
                                 <label for="email" class="form-label">Email of the user you want to share the expense with:</label>
-                                <input type="email" class="form-control" id="email" name="email" required>
+                                <input type="email" class="form-control" id="emailAddress" name="emailAddress" required>
                             </div>
                             <button type="submit" name="user" value="share" class="btn btn-primary">Share</button>
                         </form>

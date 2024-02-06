@@ -57,7 +57,7 @@ function eadd($postData)
         ];
 
         $expenseData['isFullyPaid'] = isset($resultValidation['isFullyPaid']) ? ($resultValidation['isFullyPaid'] ? 1 : 0) : 0;
-        $expenseData['paymentMethodID'] = $expenseData['isFullyPaid'] ? $resultValidation['paymentMethod'] : getPaymentMethodByName('None')['id'];
+        $expenseData['paymentMethodID'] = $expenseData['isFullyPaid'] ? $resultValidation['paymentMethod'] : getPaymentMethodByName('Cash')['paymentMethodID'];
 
         $result = createExpense($expenseData);
 
@@ -115,7 +115,7 @@ function eedit($expenseID, $postData)
         ];
 
         $expenseData = [
-            'expenseCategory' => $resultValidation['expenseCategory'],
+            'expenseCategoryID' => $resultValidation['expenseCategory'],
             'expenseDescription' => $resultValidation['expenseDescription'],
             'paidAmount' => $resultValidation['paidAmount'],
             'paymentDate' => $resultValidation['paymentDate'],
@@ -128,9 +128,11 @@ function eedit($expenseID, $postData)
         if ($expenseData['isFullyPaid']) {
             $expenseData['paymentMethodID'] = $resultValidation['paymentMethod'];
         } else {
-            $noneMethod = getPaymentMethodByName('None');
-            $expenseData['paymentMethodID'] = $noneMethod['paymentMethodID'];
+            $cashPaymentMethod = getPaymentMethodByName('Cash');
+            $expenseData['paymentMethodID'] = ['paymentMethodID'];
         }
+
+        var_dump($expenseData);
 
         if (empty($_SESSION['errors']) && updateExpense($expenseID, $expenseData)) {
             $_SESSION['success'] = '!! Expense updated SUCCESSFULLY !!';
@@ -146,15 +148,15 @@ function eedit($expenseID, $postData)
 function eshare($expenseID, $emailAddress)
 {
     try {
-        $receiverUserId = getUserIDByEmailAddress($emailAddress);
+        $sentToUserID = getUserIDByEmailAddress($emailAddress);
 
-        if (!$receiverUserId) {
+        if (!$sentToUserID) {
             $_SESSION['errors'][] = '!! User with the email "' . $emailAddress . '" NOT found !!';
             header('location: /projeto_sir/pages/secure/expensePage.php');
             exit();
         }
 
-        $sharerUserId = $_SESSION['userID'];
+        $fromUserID = $_SESSION['userID'];
 
         $shareSuccess = shareExpense($expenseID, $fromUserID, $sentToUserID);
 
@@ -207,7 +209,7 @@ function seremove($expenseID)
 
     $userID = $_SESSION['userID'];
 
-    $success = removeSharedExpense($expenseID, $userID);
+    $success = deleteSharedExpense($expenseID, $userID);
 
     if ($success) {
         $_SESSION['success'] = '!! Shared expense removed SUCCESSFULLY !!';

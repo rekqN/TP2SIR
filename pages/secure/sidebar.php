@@ -85,7 +85,7 @@ body {
                                 </a>
                             </li>
                             <li class="nav-item mb-2">
-                                <a href="./shared_expense.php" class="mx-3">
+                                <a href="./sharedExpensePage.php" class="mx-3">
                                     Shared Expenses
                                 </a>
                             </li>
@@ -93,13 +93,13 @@ body {
                     </div>
                 </li>
                 <li class="nav-item mb-3">
-                    <a href="./calendar.php" class="btn-side">
+                    <a href="./expenseCalendarPage.php" class="btn-side">
                         <i class="fa-solid fa-calendar"></i>
                         Expenses Calendar
                     </a>
                 </li>
                 <li class="nav-item mb-2">
-                    <a href="./profile.php" class="btn-side">
+                    <a href="./profilePage.php" class="btn-side">
                         <i class="fa-solid fa-user"></i>
                         Profile
                     </a>
