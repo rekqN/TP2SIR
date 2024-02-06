@@ -4,15 +4,15 @@ require_once __DIR__ . '/../../repositories/userRepository.php';
 @require_once __DIR__ . '/../../validations/session.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    if (!isset($_SESSION['id'])) {
+    if (!isset($_SESSION['userID'])) {
         $errors[] = '!! ERROR: User ID is not set in the session !!';
     }
 
     $user = [
-        'id' => $_SESSION['userID'],
-        'current_password' => $_POST['currentPassword'],
-        'new_password' => $_POST['newPassword'],
-        'repeat_password' => $_POST['confirmNewPassword'],
+        'userID' => $_SESSION['userID'],
+        'currentPassword' => $_POST['currentPassword'],
+        'newPassword' => $_POST['newPassword'],
+        'confirmNewPassword' => $_POST['confirmNewPassword'],
     ];
 
     $validationResult = validatePasswordUpdate($user['userID'], $user['currentPassword'], $user['newPassword'], $user['confirmNewPassword']);
@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (empty($errors)) {
         $hashedPassword = password_hash($user['newPassword'], PASSWORD_DEFAULT);
 
-        $updateSuccess = updatePassword($user['userID'], $hashedPassword);
+        $updateSuccess = passwordUpdate($user['userID'], $hashedPassword);
 
         if ($updateSuccess) {
             $successMessage = '!! Password updated SUCCESSFULLY !!';

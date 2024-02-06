@@ -98,7 +98,7 @@
                 </div>
 
                 <div class="mt-4" id="passwordSection" style="display: none;">
-                    <form action="../../controllers/user/password.php" method="post">
+                    <form action="../../controllers/user/updatePassword.php" method="post">
                         <div class="form-group">
                             <label class="form-label">Current password</label>
                             <input type="password" class="form-control" name="currentPassword" required style="max-width: 495px;">
