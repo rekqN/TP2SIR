@@ -106,7 +106,7 @@
                     <div class="row">
                         <div class="col justify-content-center">
                             <h5 class='card-title'><?php echo $user['firstName'] . ' ' . $user['lastName']; ?></h5>
-                            <p class='card-text'><strong>Email: </strong><?php echo $user['emailAddress']; ?></p>
+                            <p class='card-text'><strong>Email Address: </strong><?php echo $user['emailAddress']; ?></p>
                             <p class='card-text'><strong>Birth Date: </strong><?php echo $user['dateOfBirth']; ?></p>
                             <p class='card-text'><strong>Admin: </strong><?php echo $user['isAdmin'] == 1 ? 'Yes' : 'No'; ?></p>
                             <p class='card-text'><strong>Created at: </strong><?php echo $user['createdAt']; ?></p>
@@ -152,7 +152,7 @@
                                     value="<?= isset($user['lastName']) ? $user['lastName'] : '' ?>">
                             </div>
                             <div class="form-group mt-3">
-                                <label>Email</label>
+                                <label>Email Address</label>
                                 <input autocomplete="off" type="email" class="form-control" id="emailAddress" name="emailAddress"
                                     aria-describedby="emailHelp" placeholder="Enter your email address here"
                                     value="<?= isset($user['emailAddress']) ? $user['emailAddress'] : '' ?>" readonly>
@@ -183,7 +183,7 @@
                     </div>
                     <div class="modal-body">
                         <form action="../../controllers/admin/user.php" method="post">
-                            <input type="hidden" name="user_id" value="<?= $user['userID']; ?>">
+                            <input type="hidden" name="userID" value="<?= $user['userID']; ?>">
                             <div class="mb-3">
                                 Do you want to proceed deleting the user?
                             </div>
@@ -217,7 +217,7 @@
                                 placeholder="Last Name">
                         </div>
                         <div class="form-group mt-3">
-                            <label>Email</label>
+                            <label>Email Address</label>
                             <input autocomplete="off" type="email" class="form-control" id="emailAddress" name="emailAddress" aria-describedby="emailHelp" placeholder="Enter your email adress here">
                         </div>
                         <div class="form-group mt-3">

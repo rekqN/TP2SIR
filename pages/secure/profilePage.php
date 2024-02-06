@@ -131,7 +131,7 @@
                 </div>
                 <div class="modal-body">
                     <form action="../../controllers/auth/signin.php" method="post">
-                        <input type="hidden" name="id" value="<?= $user['userID']; ?>">
+                        <input type="hidden" name="userID" value="<?= $user['userID']; ?>">
                         <div class="mb-3">
                             Do you want to delete your account?
                         </div>

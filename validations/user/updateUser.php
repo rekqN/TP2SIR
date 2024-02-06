@@ -33,7 +33,7 @@ function validatedUser($req)
     $birthdate = DateTime::createFromFormat('Y-m-d', $req['dateOfBirth']);
 
     if ($birthdate > $currentDate) {
-        $errors['birthdate'] = '!! Birth date cannot be a future date !!';
+        $errors['dateOfBirth'] = '!! Birth date cannot be a future date !!';
     }
 
     $req['isAdmin'] = !empty($req['isAdmin']) == 'on' ? true : false;

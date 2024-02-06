@@ -18,7 +18,7 @@ if (isset($_POST['user'])) {
 
     if ($_POST['user'] == 'delete') {
         $userToDelete = $_POST['userID'];
-        softdelete($userToDelete);
+        softDelete($userToDelete);
     }
 }
 
@@ -88,9 +88,9 @@ function update($userID, $postData)
     }
 }
 
-function softdelete($userID)
+function softDelete($userID)
 {
-    $deleteSuccess = softDeleteUser($userID);
+    $deleteSuccess = deleteUser($userID);
 
     if ($deleteSuccess) {
         if ($_SESSION['userID'] == $userID) {
@@ -102,11 +102,11 @@ function softdelete($userID)
             setcookie('firstName', '', time() - 3600, "/");
         }
 
-        $_SESSION['success'] = 'User deleted successfully.';
+        $_SESSION['success'] = '!! User deleted SUCCESSFULLY !!';
         $home_url = 'http://' . $_SERVER['HTTP_HOST'] . '/projeto_sir/pages/secure/userManagementPage.php';
         header('Location: ' . $home_url);
         exit();
     } else {
-        $_SESSION['errors'][] = 'Error deleting user.';
+        $_SESSION['errors'][] = '!! ERROR deleting user !!';
     }
 }

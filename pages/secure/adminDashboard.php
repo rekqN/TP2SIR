@@ -69,7 +69,7 @@ $getTotalExpensesAmount = getTotalExpensesAmount();
         <div class="col-md-6 col-lg-6 mb-4">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Users with expenses</h5>
+                    <h5 class="card-title">Users With Expenses</h5>
                     <p class="card-text"><?php echo $countUsersWithExpenses; ?></p>
                 </div>
             </div>
@@ -78,7 +78,7 @@ $getTotalExpensesAmount = getTotalExpensesAmount();
         <div class="col-md-6 col-lg-6 mb-4">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Users with shared expenses</h5>
+                    <h5 class="card-title">Users With Shared Expenses</h5>
                     <p class="card-text"><?php echo $countUsersWithSharedExpenses; ?></p>
                 </div>
             </div>
@@ -89,7 +89,7 @@ $getTotalExpensesAmount = getTotalExpensesAmount();
         <div class="col-md-6 col-lg-6 mb-4">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Count Expenses by Category</h5>
+                    <h5 class="card-title">Used Expense Categories</h5>
                     <ul class="list-group">
                         <?php foreach ($countExpensesByCategory as $countCategory) : ?>
                             <?php if ($countCategory['count_expense'] > 0) : ?>
@@ -104,7 +104,7 @@ $getTotalExpensesAmount = getTotalExpensesAmount();
         <div class="col-md-6 col-lg-6 mb-4">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Count Expenses by Payment Method</h5>
+                    <h5 class="card-title">Used Payment Methods</h5>
                     <ul class="list-group">
                         <?php foreach ($countExpensesByPaymentMethod as $countPaymentMethod) : ?>
                             <?php if ($countPaymentMethod['count_expense'] > 0) : ?>
@@ -119,7 +119,7 @@ $getTotalExpensesAmount = getTotalExpensesAmount();
         <div class="col-md-6 col-lg-6 mb-4">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title">Total Active Expenses Count</h5>
+                    <h5 class="card-title">Total Active Expenses</h5>
                     <p class="card-text"><?php echo $countTotalExpenses; ?></p>
                 </div>
             </div>

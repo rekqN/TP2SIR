@@ -11,6 +11,10 @@ if (isset($_POST['user'])) {
     if ($_POST['user'] == 'logout') {
         logout();
     }
+
+    if ($_POST['user'] == 'delete') {
+        softDelete();
+    }
 }
 
 function login($req)
@@ -71,4 +75,33 @@ function logout()
 
     $home_url = 'http://' . $_SERVER['HTTP_HOST'] . '/projeto_sir/landingPage';
     header('Location: ' . $home_url);
+}
+
+function softDelete()
+{
+    if (!isset($_SESSION['userID'])) {
+        echo '!! User ID NOT SET in the session !!';
+        exit();
+    }
+
+    $user = [
+        'userID' => $_SESSION['userID'],
+    ];
+
+    $deleteSuccess = deleteUser($user['userID']);
+
+    if ($deleteSuccess) {
+        session_unset();
+        session_destroy();
+
+        setcookie(session_name(), '', time() - 3600);
+        setcookie('userID', '', time() - 3600, "/");
+        setcookie('firstName', '', time() - 3600, "/");
+
+        $home_url = 'http://' . $_SERVER['HTTP_HOST'] . '/projeto_sir/landingPage';
+        header('Location: ' . $home_url);
+        exit();
+    } else {
+        echo '!! ERROR deleting account !!';
+    }
 }

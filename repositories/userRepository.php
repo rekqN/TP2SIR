@@ -181,7 +181,7 @@ function deleteUser($userID) {
 
     $updateSuccess = $updateStatement -> execute([
         ':userID' => $userID,
-        ':newEmail' => $newEmail,
+        ':newEmailAddress' => $newEmail,
     ]);
 
     if ($updateSuccess) {

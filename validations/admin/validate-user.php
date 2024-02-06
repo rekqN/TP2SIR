@@ -15,16 +15,16 @@ function validatedUser($req)
     }
 
     if (!filter_var($req['emailAddress'], FILTER_VALIDATE_EMAIL)) {
-        $errors['emailAddress'] = 'The Email field cannot be empty and must have the email format, for example: spend@wise.com.';
+        $errors['emailAddress'] = '!! The Email field cannot be empty and must have the email format, for example: spend@wise.com !!';
     }
 
     if (getUserIDByEmailAddress($req['emailAddress'])) {
-        $errors['emailAddress'] = 'Email already registered in our system.';
+        $errors['emailAddress'] = '!! Email already in use !!';
         return ['invalid' => $errors];
     }
 
     if (!empty($req['password']) && strlen($req['password']) < 6) {
-        $errors['password'] = 'The Password field cannot be empty and must be at least 6 characters long.';
+        $errors['password'] = '!! The Password field cannot be empty and must be at least 6 characters long !!';
     }
 
     // if (!empty($req['confirm_password']) && ($req['confirm_password']) != $req['password']) {
