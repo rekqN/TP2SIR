@@ -27,18 +27,18 @@ function getAllExpensesByUserID($userID)
     }
 }
 
-function getExpensesByPaymentDate($userID, $date)
+function getExpensesByPaymentDate($userID, $paymentDate)
 {
     try {
-        $query = "SELECT EXPENSES.*, EXPENSECATEGORIES.expenseCategory AS expense_category, PAYMENTMETHODS.description AS payment_method
+        $query = "SELECT EXPENSES.*, EXPENSECATEGORIES.expenseCategory AS expense_category, PAYMENTMETHODS.paymentMethod AS payment_method
                 FROM EXPENSES
                 LEFT JOIN EXPENSECATEGORIES ON EXPENSES.expenseCategoryID = EXPENSECATEGORIES.expenseCategoryID
-                LEFT JOIN PAYMENTMETHODS ON EXPENSES.payment_id = PAYMENTMETHODS.paymentMethodID
-                WHERE EXPENSES.userID = :userID AND DATE(EXPENSES.paymenteDate) = DATE(:date) AND EXPENSES.deletedAt IS NULL";
+                LEFT JOIN PAYMENTMETHODS ON EXPENSES.paymentMethodID = PAYMENTMETHODS.paymentMethodID
+                WHERE EXPENSES.userID = :userID AND DATE(EXPENSES.paymenteDate) = DATE(:paymentDate) AND EXPENSES.deletedAt IS NULL";
 
         $PDOStatement = $GLOBALS['pdo'] -> prepare($query);
         $PDOStatement -> bindParam(':userID', $userID, PDO::PARAM_INT);
-        $PDOStatement -> bindParam(':date', $date, PDO::PARAM_STR);
+        $PDOStatement -> bindParam(':paymentDate', $paymentDate, PDO::PARAM_STR);
         $PDOStatement -> execute();
 
         $expenses = [];
@@ -57,11 +57,11 @@ function getExpensesByPaymentDate($userID, $date)
 function getExpensesByPaidAmount($userID, $paidAmount)
 {
     try {
-        $query = "SELECT * FROM EXPENSES WHERE userID = :userID AND amount = :amount AND deletedAt IS NULL";
+        $query = "SELECT * FROM EXPENSES WHERE userID = :userID AND paidAmount = :paidAmount AND deletedAt IS NULL";
 
         $PDOStatement = $GLOBALS['pdo'] -> prepare($query);
         $PDOStatement -> bindParam(':userID', $userID, PDO::PARAM_INT);
-        $PDOStatement -> bindParam(':amount', $amount, PDO::PARAM_STR);
+        $PDOStatement -> bindParam(':paidAmount', $paidAmount, PDO::PARAM_STR);
         $PDOStatement -> execute();
 
         $expenses = $PDOStatement -> fetchAll(PDO::FETCH_ASSOC);
@@ -76,7 +76,7 @@ function getExpensesByPaidAmount($userID, $paidAmount)
 function getExpensesByExpenseCategoryByUserID($userID, $categoryID)
 {
     try {
-        $query = "SELECT EXPENSES.*, EXPENSECATEGORIES.expenseCategory AS expense_category, PAYMENTMETHODS.description AS payment_method
+        $query = "SELECT EXPENSES.*, EXPENSECATEGORIES.expenseCategory AS expense_category, PAYMENTMETHODS.paymentMethod AS payment_method
                 FROM EXPENSES
                 LEFT JOIN EXPENSECATEGORIES ON EXPENSES.expenseCategoryID = EXPENSECATEGORIES.expenseCategoryID
                 LEFT JOIN PAYMENTMETHODS ON EXPENSES.paymentMethodID = PAYMENTMETHODS.paymentMethodID
@@ -103,11 +103,11 @@ function getExpensesByExpenseCategoryByUserID($userID, $categoryID)
 function getExpensesByPaymentMethodByUserID($userID, $paymentMethodID)
 {
     try {
-        $query = "SELECT EXPENSES.*, EXPENSECATEGORIES.expenseCategory AS expense_category, PAYMENTMETHODS.description AS payment_method
+        $query = "SELECT EXPENSES.*, EXPENSECATEGORIES.expenseCategory AS expense_category, PAYMENTMETHODS.paymentMethod AS payment_method
                 FROM EXPENSES
                 LEFT JOIN EXPENSECATEGORIES ON EXPENSES.expenseCategoryID = EXPENSECATEGORIES.expenseCategoryID
                 LEFT JOIN PAYMENTMETHODS ON EXPENSES.paymentMethodID = PAYMENTMETHODS.paymentMethodID
-                WHERE EXPENSES.userID = :userID AND EXPENSES.paymentMethodID = :paymentMethodId AND EXPENSES.deletedAt IS NULL";
+                WHERE EXPENSES.userID = :userID AND EXPENSES.paymentMethodID = :paymentMethodID AND EXPENSES.deletedAt IS NULL";
 
         $PDOStatement = $GLOBALS['pdo'] -> prepare($query);
         $PDOStatement -> bindParam(':userID', $userID, PDO::PARAM_INT);
@@ -130,7 +130,7 @@ function getExpensesByPaymentMethodByUserID($userID, $paymentMethodID)
 function getExpensesByExpenseDescription($userID, $expenseDescription)
 {
     try {
-        $query = "SELECT EXPENSES.*, EXPENSECATEGORIES.expenseCategory AS expense_category, PAYMENTMETHODS.description AS payment_method
+        $query = "SELECT EXPENSES.*, EXPENSECATEGORIES.expenseCategory AS expense_category, PAYMENTMETHODS.paymentMethod AS payment_method
                 FROM EXPENSES
                 LEFT JOIN EXPENSECATEGORIES ON EXPENSES.expenseCategoryID = EXPENSECATEGORIES.expenseCategoryID
                 LEFT JOIN PAYMENTMETHODS ON EXPENSES.paymentMethodID = PAYMENTMETHODS.paymentMethodID
@@ -158,17 +158,18 @@ function getExpensesByExpenseDescription($userID, $expenseDescription)
 function getExpensesByPaymentStatus($userID, $paymentStatus)
 {
     try {
-        $query = "SELECT EXPENSES.*, EXPENSECATEGORIES.expenseCategory AS expense_category, PAYMENTMETHODS.description AS payment_method
+        $query = "SELECT EXPENSES.*, EXPENSECATEGORIES.expenseCategory AS expense_category, PAYMENTMETHODS.paymentMethod AS payment_method
                 FROM EXPENSES
                 LEFT JOIN EXPENSECATEGORIES ON EXPENSES.expenseCategoryID = EXPENSECATEGORIES.expenseCategoryID
                 LEFT JOIN PAYMENTMETHODS ON EXPENSES.paymentMethodID = PAYMENTMETHODS.paymentMethodID";
 
         if ($paymentStatus === 'Paid' || $paymentStatus === 'Unpaid') {
             $paymentStatusValue = ($paymentStatus === 'Paid') ? 1 : 0;
-            $query .= 'WHERE EXPENSES.userID = :userID AND EXPENSES.isFullyPaid = :paymentStatusValue AND EXPENSES.deletedAt IS NULL';
+            $query .= ' WHERE EXPENSES.userID = :userID AND EXPENSES.isFullyPaid = :paymentStatusValue AND EXPENSES.deletedAt IS NULL';
         } else {
-            $query .= 'WHERE EXPENSES.userID = :userID AND EXPENSES.deletedAt IS NULL';
+            $query .= ' WHERE EXPENSES.userID = :userID AND EXPENSES.deletedAt IS NULL';
         }
+
 
         $PDOStatement = $GLOBALS['pdo'] -> prepare($query);
         $PDOStatement -> bindParam(':userID', $userID, PDO::PARAM_INT);
