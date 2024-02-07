@@ -12,12 +12,12 @@ if (isset($_POST['user'])) {
     }
 
     if ($_POST['user'] == 'update') {
-        $userToEdit = $_POST['userID'];
+        $userToEdit = $_POST['user'];
         update($userToEdit, $_POST);
     }
 
     if ($_POST['user'] == 'delete') {
-        $userToDelete = $_POST['userID'];
+        $userToDelete = $_POST['user'];
         softDelete($userToDelete);
     }
 }
@@ -72,10 +72,9 @@ function update($userID, $postData)
         return;
     }
 
-    $userID = $postData['userID'];
+    $userID = $postData['user'];
 
     $success = updateAdminUser($userID, $userData);
-    var_dump($success);
 
     if ($success) {
         $_SESSION['success'] = '!! User SUCCESSFULLY updated !!';
@@ -83,7 +82,7 @@ function update($userID, $postData)
         $params = '?' . http_build_query($data);
         header('location: /projeto_sir/pages/secure/userManagementPage.php');
     } else {
-        $_SESSION['errors'][] = '!! Failed to UPDATE user !!';
+        $_SESSION['errors'][] = '!! FAILED to update user information !!';
         header('location: /projeto_sir/pages/secure/userManagementPage.php');
     }
 }

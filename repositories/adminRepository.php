@@ -27,15 +27,7 @@ function createUser($userID)
 function updateAdminUser($userID, $userData)
 {
     try {
-        $sqlUpdate = "UPDATE users SET firstName = :firstName, lastName = :lastName, country = :country,  dateOfBirth = :dateOfBirth, isAdmin = :isAdmin, updatedAt = CURRENT_TIMESTAMP";
-
-        if (!empty($userData['password'])) {
-            $sqlUpdate .= ', password = :password';
-            $userData['password'] = password_hash($userData['password'], PASSWORD_DEFAULT);
-        }
-
-        $sqlUpdate .= " WHERE userID = :userID";
-
+        $sqlUpdate = "UPDATE USERS SET firstName = :firstName, lastName = :lastName, dateOfBirth = :dateOfBirth, isAdmin = :isAdmin, updatedAt = CURRENT_TIMESTAMP WHERE userID = :userID";
         $PDOStatement = $GLOBALS['pdo'] -> prepare($sqlUpdate);
 
         if (empty($userData['dateOfBirth'])) {
@@ -45,16 +37,11 @@ function updateAdminUser($userID, $userData)
         $params = [
             ':firstName' => $userData['firstName'],
             ':lastName' => $userData['lastName'],
-            ':country' => $userData['country'],
             ':dateOfBirth' => $userData['dateOfBirth'],
             ':isAdmin' => $userData['isAdmin'],
             ':userID' => $userID,
         ];
-
-        if (!empty($userData['password'])) {
-            $params[':password'] = $userData['password'];
-        }
-
+        
         $params = array_filter($params, function ($value) {
             return $value !== '';
         });

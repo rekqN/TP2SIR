@@ -138,33 +138,26 @@
                     </div>
                     <div class="modal-body pt-0">
                         <form action="../../controllers/admin/user.php" method="post">
-                            <input type="hidden" name="user_id" value="<?= $user['userID']; ?>">
+                            <input type="hidden" name="userID" value="<?= $user['userID']; ?>">
                             <div class="form-group mt-3">
                                 <label>First Name</label>
-                                <input autocomplete="off" type="text" class="form-control" id="firstName"
-                                    name="firstName" placeholder="First Name"
-                                    value="<?= isset($user['firstName']) ? $user['firstName'] : '' ?>">
+                                <input autocomplete="off" type="text" class="form-control" id="firstName" name="firstName" placeholder="First Name" value="<?= isset($user['firstName']) ? $user['firstName'] : '' ?>">
                             </div>
                             <div class="form-group mt-3">
                                 <label>Last Name</label>
-                                <input autocomplete="off" type="text" class="form-control" id="lastName"
-                                    name="lastName" placeholder="Last Name"
-                                    value="<?= isset($user['lastName']) ? $user['lastName'] : '' ?>">
+                                <input autocomplete="off" type="text" class="form-control" id="lastName" name="lastName" placeholder="Last Name" value="<?= isset($user['lastName']) ? $user['lastName'] : '' ?>">
                             </div>
                             <div class="form-group mt-3">
                                 <label>Email Address</label>
-                                <input autocomplete="off" type="email" class="form-control" id="emailAddress" name="emailAddress"
-                                    aria-describedby="emailHelp" placeholder="Enter your email address here"
-                                    value="<?= isset($user['emailAddress']) ? $user['emailAddress'] : '' ?>" readonly>
+                                <input autocomplete="off" type="email" class="form-control" id="emailAddress" name="emailAddress" aria-describedby="emailHelp" placeholder="Enter your email address here" value="<?= isset($user['emailAddress']) ? $user['emailAddress'] : '' ?>" readonly>
                             </div>
                             <div class="form-group mt-3">
                                 <label>Birth Date</label>
                                 <input autocomplete="off" type="date" class="form-control" id="dateOfBirth" name="dateOfBirth" aria-describedby="birthDateHelp" placeholder="Enter birth date" value="<?= isset($user['dateOfBirth']) ? $user['dateOfBirth'] : '' ?>">
                             </div>
                             <div class="form-check mt-3">
-                                <label class="form-check-label">Admin?</label>
-                                <input autocomplete="off" class="form-check-input" type="checkbox" name="isAdmin"
-                                    id="isAdmin" <?= isset($user['isAdmin']) && $user['isAdmin'] == 1 ? 'checked' : '' ?>>
+                                <label class="form-check-label">Make Admin</label>
+                                <input autocomplete="off" class="form-check-input" type="checkbox" name="isAdmin" id="isAdmin" <?= isset($user['isAdmin']) && $user['isAdmin'] == 1 ? 'checked' : '' ?>>
                             </div>
                             <button type="submit" class="btn btn-brown mt-3" name="user" value="update">Update</button>
                         </form>
