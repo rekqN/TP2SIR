@@ -160,5 +160,5 @@ body {
                 <a href="#" class="text-white" data-bs-toggle="offcanvas" data-bs-target="#bdSidebar">
                     <i class="fa-solid fa-bars"></i>
                 </a>
-                <span class="ms-3" style="font-size: 16px; color: blueviolet">EXPENSE FLOW</span>
+                <span class="ms-3" style="font-size: 16px; color: var(--very-light-brown)">SPENDWISE</span>
             </div>
